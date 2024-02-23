@@ -1,0 +1,19 @@
+{
+  "overrides": [
+    {
+      "files": ["*.ejs"],
+      "options": {
+        "printWidth": 160,
+        "bracketSameLine": true,
+        "plugins": ["prettier-plugin-ejs"]
+      }
+    },
+    {
+      "files": ["./src/custom-info.ts"],
+      "options": {
+        "printWidth": 160
+      }
+    }
+  ],
+  "trailingComma": "es5"
+}

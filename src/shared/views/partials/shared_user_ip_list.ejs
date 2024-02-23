@@ -1,0 +1,18 @@
+<a href="#" id="ip-list-toggle">Show all (<%- user.ip.length %>)</a>
+<div id="ip-list" style="display: none; grid-template-columns: max-content minmax(0, 1fr) max-content max-content; margin: 0; gap: 1rem; row-gap: 0.25rem">
+    <% sortIpUsage(user.ipUsage).forEach((usage, index, array) => { %>
+    <span style="display: block; font-weight: 600"><%- String(index + 1) %>.</span>
+
+    <code><%- shouldRedact ? redactIp(usage.ip) : usage.ip %></code>
+    <code style="justify-self: center"><%- usage.prompt %></code>
+    <code style="justify-self: end"><%- usage.lastUsedAt %></code>
+    <% }) %>
+</div>
+
+<script>
+    document.getElementById("ip-list-toggle").addEventListener("click", (e) => {
+        e.preventDefault();
+        document.getElementById("ip-list").style.display = "grid";
+        document.getElementById("ip-list-toggle").style.display = "none";
+    });
+</script>

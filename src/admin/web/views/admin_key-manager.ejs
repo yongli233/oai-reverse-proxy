@@ -1,0 +1,456 @@
+<%- include("partials/shared_header", { title: "Key Manager - OAI Reverse Proxy Admin" }) %>
+
+<style>
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & > button {
+      background-color: #fff;
+
+      border: none;
+      outline: none;
+      padding: 1rem 1.25rem;
+
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 1rem;
+      text-transform: capitalize;
+    }
+
+    & > button:hover,
+    & > button.active {
+      background-color: #b4b4b4;
+    }
+
+    & > button:first-child {
+      border-radius: 1rem 0 0 1rem;
+    }
+
+    & > button:last-child {
+      border-radius: 0 1rem 1rem 0;
+    }
+  }
+
+  div.actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & button {
+      background-color: #fff;
+
+      border: none;
+      outline: none;
+      padding: 0.5rem 1rem;
+
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 1rem;
+      text-transform: capitalize;
+    }
+
+    & button:hover {
+      background-color: #b4b4b4;
+    }
+
+    & > div:first-child {
+      overflow: hidden;
+      border-radius: 1rem 0 0 1rem;
+    }
+
+    & > div:last-child {
+      overflow: hidden;
+      border-radius: 0 1rem 1rem 0;
+    }
+  }
+
+  .services > * + * {
+    margin-top: 1rem;
+  }
+
+  table {
+    width: 100%;
+
+    & .delete {
+      width: 100%;
+
+      background-color: transparent;
+      color: red;
+
+      border: none;
+      border-radius: 0.5rem;
+      outline: none;
+      cursor: pointer;
+
+      transition:
+        color,
+        background-color 0.3s linear;
+      padding: 0.25rem 0.5rem;
+    }
+
+    & .delete:hover {
+      background-color: red;
+      color: white;
+    }
+
+    & .valid,
+    & .invalid {
+      text-align: center;
+    }
+
+    & .valid {
+      color: green;
+    }
+
+    & .invalid {
+      color: red;
+    }
+  }
+
+  .statistics {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.5rem;
+
+		& > div:not(:first-child) {
+			&::before {
+				content: "-";
+			}
+		}
+
+    & > div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      gap: 0.5rem;
+
+      & > span:nth-child(2) {
+        font-weight: bold;
+
+        &.valid {
+          color: green;
+        }
+
+        &.invalid {
+          color: red;
+        }
+      }
+    }
+  }
+
+  .hidden {
+    display: none;
+  }
+</style>
+
+<h1 style="text-align: center">Key Manager</h1>
+
+<hr />
+
+<% let services = [ "openai", "anthropic", "google-ai", "mistral-ai", "aws", "azure" ] %>
+
+<header>
+  <% services.forEach(service => { %>
+  <button onclick="pickServiceTab(event)" data-service="<%= service %>"><%= service %></button>
+  <% }) %>
+</header>
+
+<hr />
+
+<main>
+  <% services.forEach(service => { %>
+  <section data-service="<%= service %>" class="hidden services">
+    <h2 style="text-align: center; text-transform: capitalize">Statistics</h2>
+
+    <div class="statistics">
+      <% let serviceKeys = keys.filter((k) => k.service === service) %>
+
+      <div>
+        <span>Total Keys: </span>
+        <span class="<%= serviceKeys.length > 0 ? "valid" : "invalid" %>"><%= serviceKeys.length %></span>
+      </div>
+
+			<div>
+				<% let working = serviceKeys.filter((key) => !key.isDisabled) %>
+
+				<span>Working Keys: </span>
+				<span class="<%= working.length > 0 ? "valid" : "invalid" %>"><%= working.length %></span>
+			</div>
+
+			<% if (service === "openai") { %>
+				<div>
+					<% let turbo = serviceKeys.filter((key) => key.modelFamilies.includes("turbo")) %>
+					
+					<span>Turbo Keys: </span>
+					<span class="<%= turbo.length > 0 ? "valid" : "invalid" %>"><%= turbo.length %></span>
+				</div>
+
+				<div>
+					<% let gpt4 = serviceKeys.filter((key) => key.modelFamilies.includes("gpt4")) %>
+					
+					<span>GPT 4 Keys: </span>
+					<span class="<%= gpt4.length > 0 ? "valid" : "invalid" %>"><%= gpt4.length %></span>
+				</div>
+
+				<div>
+					<% let gpt4_32k = serviceKeys.filter((key) => key.modelFamilies.includes("gpt4-32k")) %>
+					
+					<span>GPT 4 32K Keys: </span>
+					<span class="<%= gpt4_32k.length > 0 ? "valid" : "invalid" %>"><%= gpt4_32k.length %></span>
+				</div>
+
+				<div>
+					<% let overQuota = serviceKeys.filter((key) => key.isOverQuota) %>
+					
+					<span>OverQuota Keys: </span>
+					<span class="<%= overQuota.length > 0 ? "valid" : "invalid" %>"><%= overQuota.length %></span>
+				</div>
+			<% } %>
+
+			<% if (service === "anthropic") { %>
+				<div>
+					<% let pozzed = serviceKeys.filter((key) => key.isPozzed) %>
+					
+					<span>Pozzed Keys: </span>
+					<span class="<%= pozzed.length > 0 ? "valid" : "invalid" %>"><%= pozzed.length %></span>
+				</div>
+			<% } %>
+
+
+      <div>
+				<% let revokedKeys = serviceKeys.filter((key) => key.isRevoked) %>
+
+        <span>Revoked Keys: </span>
+        <span class="<%= revokedKeys.length > 0 ? "valid" : "invalid" %>"><%= revokedKeys.length %></span>
+      </div>
+    </div>
+
+    <hr />
+
+    <h2 style="text-align: center; text-transform: capitalize">Actions</h2>
+
+    <div class="actions">
+      <div>
+        <form id="addKey" action="/admin/manage/key-manager/add-keys" method="POST">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <input type="hidden" name="service" value="<%= service %>" />
+          <button type="button" onclick="promptAddKeys(event)">Add Key</button>
+        </form>
+      </div>
+
+      <div>
+        <form id="recheck" action="/admin/manage/maintenance" method="POST">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <input type="hidden" name="action" value="recheck" />
+          <button type="button" onclick="promptRecheckKeys(event)">Recheck Keys</button>
+        </form>
+      </div>
+
+      <div>
+        <form action="/admin/manage/key-manager/delete-keys" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <input type="hidden" name="service" value="<%= service %>" />
+          <button type="button" onclick="promptRemoveKeys(event, 'overQuota')">Remove Over Quota Keys</button>
+        </form>
+      </div>
+
+      <div>
+        <form action="/admin/manage/key-manager/delete-keys" method="post">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <input type="hidden" name="service" value="<%= service %>" />
+          <button type="button" onclick="promptRemoveKeys(event, 'revoked')">Remove Revoked Keys</button>
+        </form>
+      </div>
+    </div>
+
+    <hr />
+
+    <table>
+      <thead>
+        <tr>
+          <th>Key</th>
+					<th><a data-sort="isWorking">Is Working</a></th>
+          <% if (service === "openai") { %>
+          <th><a data-sort="organizationId"> Org </a></th>
+          <th><a data-sort="gpt4"> GPT 4 </a></th>
+          <th><a data-sort="gpt4-32k"> GPT 4 32K </a></th>
+          <th><a data-sort="isOverQuota"> Over Quota </a></th>
+          <% } else if (service === "anthropic") { %>
+          <th><a data-sort="isPozzed">Pozzed</a></th>
+          <% } %>
+
+          <th><a data-sort="isRevoked">Is Revoked</a></th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% keys.filter((key) => key.service === service).forEach(key => { %>
+        <tr>
+          <td><%= key.hash %></td>
+
+          <td class="<%= !key.isDisabled ? 'valid' : 'invalid' %>"><%= !key.isDisabled %></td>
+
+          <% if (service === "openai") { %>
+          <td><%= key.organizationId ?? "Default" %></td>
+          <td class="<%= key.modelFamilies.includes("gpt4") ? 'valid' : 'invalid' %>"><%= key.modelFamilies.includes("gpt4") %></td>
+          <td class="<%= key.modelFamilies.includes("gpt4-32k") ? 'valid' : 'invalid' %>"><%= key.modelFamilies.includes("gpt4-32k") %></td>
+          <td class="<%= key.isOverQuota ? 'valid' : 'invalid' %>"><%= key.isOverQuota %></td>
+
+          <% } else if (service === "anthropic") { %>
+          <td class="<%= key.isPozzed ? 'valid' : 'invalid' %>"><%= key.isPozzed %></td>
+          <% } %>
+
+          <td class="<%= key.isRevoked ? 'valid' : 'invalid' %>"><%= key.isRevoked %></td>
+
+          <td>
+            <form action="/admin/manage/key-manager/delete-keys" method="post">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+              <input type="hidden" name="service" value="<%= service %>" />
+              <button class="delete" type="button" onclick="promptRemoveKeys(event, 'key')" data-hash="<%= key.hash %>">X</button>
+            </form>
+          </td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </section>
+  <% }) %>
+</main>
+
+<script>
+  $(function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const service = urlParams.get("service");
+
+    urlParams.delete("addedKeys");
+    urlParams.delete("removedKeys");
+
+    if (service) {
+      $(`header > button[data-service="${service}"]`).addClass("active");
+      $(`main > section[data-service="${service}"]`).removeClass("hidden");
+    } else {
+      $(`header > button:first-child`).addClass("active");
+      $(`main > section:first-child`).removeClass("hidden");
+    }
+
+    $("a[data-sort]").each((i, e) => {
+      const element = $(e);
+      urlParams.set("sort", element.data("sort"));
+
+      element.attr("href", "?" + urlParams.toString());
+    });
+  });
+
+  /**
+   * Function to pick a service tab.
+   *
+   * @param {Event} event - The event object.
+   */
+  function pickServiceTab(event) {
+    const service = event.target.dataset.service;
+
+    $("header > .active").removeClass("active");
+    $("main > section:not(.hidden)").addClass("hidden");
+
+    $(event.target).addClass("active");
+    $(`main > section[data-service="${service}"]`).removeClass("hidden");
+
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set("service", service);
+
+    urlParams.delete("addedKeys");
+    urlParams.delete("removedKeys");
+
+    $("a[data-sort]").each((i, e) => {
+      const element = $(e);
+      urlParams.set("sort", element.data("sort"));
+
+      element.attr("href", "?" + urlParams.toString());
+    });
+
+    history.pushState(null, null, "?" + urlParams.toString());
+  }
+
+  function promptAddKeys(event) {
+    const userInput = prompt("Enter the key/s (Multiple ones separated by ',')");
+
+    if (userInput) {
+      const keysInput = document.createElement("input");
+
+      keysInput.setAttribute("type", "hidden");
+      keysInput.setAttribute("name", "keyInput");
+      keysInput.setAttribute("value", userInput);
+
+      $(event.target).parent().append(keysInput).submit().remove("[name=keyInput]");
+    }
+  }
+
+  /**
+   * @param {Event} event
+   * @param {"key" | "revoked" | "overQuota"} mode
+   */
+  function promptRemoveKeys(event, mode) {
+    switch (mode) {
+      case "revoked": {
+        if (confirm("Are you sure you want to remove all revoked keys?")) {
+          const revokedInput = document.createElement("input");
+
+          revokedInput.setAttribute("type", "hidden");
+          revokedInput.setAttribute("name", "hash");
+          revokedInput.setAttribute("value", "revoked");
+
+          $(event.target).parent().append(revokedInput).submit().remove("[name=hash]");
+        }
+        break;
+      }
+
+      case "overQuota": {
+        if (confirm("Are you sure you want to remove all over quota keys?")) {
+          const overQuotaInput = document.createElement("input");
+
+          overQuotaInput.setAttribute("type", "hidden");
+          overQuotaInput.setAttribute("name", "hash");
+          overQuotaInput.setAttribute("value", "overQuota");
+
+          $(event.target).parent().append(overQuotaInput).submit().remove("[name=hash]");
+        }
+        break;
+      }
+
+      case "key":
+      default: {
+        const hash = event.target.dataset.hash;
+
+        if (confirm(`Are you sure you want to remove the key ${hash}?`)) {
+          const hashInput = document.createElement("input");
+
+          hashInput.setAttribute("type", "hidden");
+          hashInput.setAttribute("name", "hash");
+          hashInput.setAttribute("value", hash);
+
+          $(event.target).parent().append(hashInput).submit().remove("[name=hash]");
+        }
+        break;
+      }
+    }
+  }
+
+  /**
+   * Prompts the user to recheck keys.
+   *
+   * @param {Event} event - The event object.
+   */
+  function promptRecheckKeys(event) {
+    if (confirm("Are you sure you want to recheck all keys?")) {
+      $(event.target).parent().submit();
+    }
+  }
+</script>
+
+<%- include("partials/admin-footer") %>
