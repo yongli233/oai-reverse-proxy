@@ -6,6 +6,15 @@
     <link rel="icon" href="https://files.catbox.moe/iy7yk9.ico" type="image/x-icon">
     <title>Hare-Proxy</title>
 	<style>
+	:root {
+    --red: #A82C3A;
+    --orange: #FF5722;
+    --yellow: #FFC300;
+    --green: #B2E835;
+    --blue: #00CED1;
+    --indigo: #4B0082;
+    --violet: #1B1721;
+}
       body{
         font-family: "Lucida Console", Monaco, monospace;
         font-size: 18px;
@@ -14,6 +23,7 @@
         width: 50%;
         margin: 0 auto;
         padding: 100px;
+        
       }
 		._css{
 			font-size: 10px;
@@ -24,10 +34,40 @@
         -webkit-user-select: none;
         -ms-user-select: none;
       }
-		h1{
-			color:red;
-			font-size: 30px;
-		}
+h1 {
+  font-size: 8vw;
+  color: white;
+  -webkit-text-stroke: 0.015em black;
+  text-shadow: 0.05em 0.05em var(--red), 0.1em 0.1em var(--orange), 0.15em 0.15em var(--yellow), 0.2em 0.2em var(--green), 0.25em 0.25em var(--blue), 0.3em 0.3em var(--indigo), 0.35em 0.35em var(--violet);
+  animation: text-shadow-cascade 1s infinite steps(1);
+}
+
+@keyframes text-shadow-cascade {
+  0% {
+    text-shadow: 0.05em 0.05em var(--red), 0.1em 0.1em var(--orange), 0.15em 0.15em var(--yellow), 0.2em 0.2em var(--green), 0.25em 0.25em var(--blue), 0.3em 0.3em var(--indigo), 0.35em 0.35em var(--violet);
+  }
+  14.29% {
+    text-shadow: 0.05em 0.05em var(--violet), 0.1em 0.1em var(--red), 0.15em 0.15em var(--orange), 0.2em 0.2em var(--yellow), 0.25em 0.25em var(--green), 0.3em 0.3em var(--blue), 0.35em 0.35em var(--indigo);
+  }
+  28.57% {
+    text-shadow: 0.05em 0.05em var(--indigo), 0.1em 0.1em var(--violet), 0.15em 0.15em var(--red), 0.2em 0.2em var(--orange), 0.25em 0.25em var(--yellow), 0.3em 0.3em var(--green), 0.35em 0.35em var(--blue);
+  }
+  42.86% {
+    text-shadow: 0.05em 0.05em var(--blue), 0.1em 0.1em var(--indigo), 0.15em 0.15em var(--violet), 0.2em 0.2em var(--red), 0.25em 0.25em var(--orange), 0.3em 0.3em var(--yellow), 0.35em 0.35em var(--green);
+  }
+  57.14% {
+    text-shadow: 0.05em 0.05em var(--green), 0.1em 0.1em var(--blue), 0.15em 0.15em var(--indigo), 0.2em 0.2em var(--violet), 0.25em 0.25em var(--red), 0.3em 0.3em var(--orange), 0.35em 0.35em var(--yellow);
+  }
+  71.43% {
+    text-shadow: 0.05em 0.05em var(--yellow), 0.1em 0.1em var(--green), 0.15em 0.15em var(--blue), 0.2em 0.2em var(--indigo), 0.25em 0.25em var(--violet), 0.3em 0.3em var(--red), 0.35em 0.35em var(--orange);
+  }
+  85.71% {
+    text-shadow: 0.05em 0.05em var(--orange), 0.1em 0.1em var(--yellow), 0.15em 0.15em var(--green), 0.2em 0.2em var(--blue), 0.25em 0.25em var(--indigo), 0.3em 0.3em var(--violet), 0.35em 0.35em var(--red);
+  }
+  100% {
+    text-shadow: 0.05em 0.05em var(--red), 0.1em 0.1em var(--orange), 0.15em 0.15em var(--yellow), 0.2em 0.2em var(--green), 0.25em 0.25em var(--blue), 0.3em 0.3em var(--indigo), 0.35em 0.35em var(--violet);
+  }
+}
 		
 		.black-white-button {
 			background-color: white;
@@ -68,9 +108,29 @@
         .bottom-bar .links a:hover {
           color: white;
         }
+        
+      .left-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+                width: 260px; 
+        height: auto;
+      }
+
+      .right-image {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 90px; 
+        height: auto;
+      }
+
+
 	</style>
 </head>
 <body>
+        <img src="https://media.discordapp.net/attachments/935593183126110281/1212822403588034620/GHW1wh0W4AY6zmd.jpg?ex=65f33be2&is=65e0c6e2&hm=a53d0c2c4f4b9d5b1146e70e37b23ca5d02ac761ea8f78f703a4d027a9036f58&=&format=webp&width=1398&height=671" class="left-image" alt="Left Image">
+    <img src="https://media.discordapp.net/attachments/1136768762725552198/1212797709573161092/images.jpg?ex=65f324e2&is=65e0afe2&hm=3a83f66496793dc09d7360b8e463fc79272080a861ad2be10c1ec048c43477b7&=&format=webp" class="right-image" alt="Right Image">
 	<h1>Hare-Proxy</h1>
 	<h2>* /PUBLIC</h2>
 	<br>
@@ -82,8 +142,10 @@
 <h2>* WE DO NOT ALLOW USING OUR API FOR NSFW/ILLEGAL PURPOSES</h2>
 <small><sub>(Except AWS Claude models)</sub></small>
 <br>
+
 <br><br>
 <b>STATUS:</b><br>
+    <div style="overflow-x: auto;">
 <table>
     <tr>
         <th>Uptime:</th>
@@ -102,13 +164,14 @@
         <td>{config:textModelRateLimit}</td>
     </tr>
 </table>
+</div>
 <br>
 	<br>
 	<!-- HTML generated using hilite.me --><div style="background: #99999; overflow:auto;width:auto;border:black;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 100%; "><span style="color: #888888">/*Proxy Endpoint URLs*/</span>
-	<span style="color: #BB0066; font-weight: bold">OPENAI AZURE</span>
+	<span style="color: #BB0066; font-weight: bold">OPENAI AZURE</span>:
 	  <span style="color: #008800; font-weight: bold">https://hareproxy.io.vn/proxy/azure/openai/v1</span><span style="color: #333333">;
 
-	<span style="color: #BB0066; font-weight: bold">AWS CLAUDE</span><span style="color: #333333"></span><span style="color: #555555; font-weight: bold"></span>
+	<span style="color: #BB0066; font-weight: bold">AWS CLAUDE</span>:<span style="color: #333333"></span><span style="color: #555555; font-weight: bold"></span>
 	  <span style="color: #008800; font-weight: bold">https://hareproxy.io.vn/proxy/aws/claude/v1</span><span style="color: #333333">
 	</pre></div>
 	<br>
