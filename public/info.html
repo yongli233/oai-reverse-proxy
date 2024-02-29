@@ -154,6 +154,39 @@ h1 {
         width: 90px; 
         height: auto;
       }
+      
+            .reveal-wrapper {
+        display: inline-block;
+                  color: #272223;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+      }
+  
+      .reveal-content {
+        display: none;
+      }
+  
+      .reveal-trigger {
+        cursor: pointer;
+        text-decoration: underline;
+        color: #595959;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+      }
+      
+          .reveal-trigger:hover {
+        color: #CC785C;
+      }
+  
+      .reveal-content.show {
+        display: block;
+      }
+
+      .reveal-trigger .icon {
+        margin-left: 5px;
+      }
+      
 
 	</style>
 </head>
@@ -209,16 +242,36 @@ h1 {
 	  <span style="color: #008800; font-weight: bold">https://hareproxy.io.vn/proxy/aws/claude/v1</span><span style="color: #333333">
 	</pre></div>
 	<br>
+	<div class="reveal-wrapper">
+  <span class="reveal-trigger">Discord Invite <i class="icon fas fa-eye"></i></span>
+  <div class="reveal-content">
+    <code><a href="https://discord.gg/7TAXPFvUzf"
+>https://discord.gg/7TAXPFvUzf</a></code>
+  </div>
 	
 	        <div class="bottom-bar">
         <div class="content">
           <p>Build: {build}.</p>
+          
         </div>
+        
         <div class="links">
           <a href="https://hareproxy.io.vn/user/lookup" style="
     margin-left: 40px;
     margin-right: 40px;
 ">Login</a>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var revealTrigger = document.querySelector('.reveal-trigger');
+  var revealContent = document.querySelector('.reveal-content');
+
+  revealTrigger.addEventListener('click', function() {
+    revealContent.classList.toggle('show');
+  });
+});
+</script>
 
 </body>
 </html>
