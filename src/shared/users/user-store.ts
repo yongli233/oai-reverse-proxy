@@ -10,6 +10,7 @@
 import admin from "firebase-admin";
 import schedule from "node-schedule";
 import { v4 as uuid } from "uuid";
+import crypto from "crypto";
 import { config, getFirebaseApp } from "../../config";
 import {
   getAzureOpenAIModelFamily,
@@ -39,6 +40,7 @@ const INITIAL_TOKENS: Required<UserTokenCounts> = {
   "mistral-tiny": 0,
   "mistral-small": 0,
   "mistral-medium": 0,
+  "mistral-large": 0,
   "aws-claude": 0,
   "azure-turbo": 0,
   "azure-gpt4": 0,
@@ -91,6 +93,8 @@ export function createUser(createOptions?: {
     ipUsage: [],
     type: "normal",
     promptCount: 0,
+    promptCountSinceStart: 0,
+    tokenCountsSinceStart: { ...INITIAL_TOKENS },
     tokenCounts: { ...INITIAL_TOKENS },
     tokenLimits: createOptions?.tokenLimits ?? { ...config.tokenQuota },
     createdAt: Date.now(),
@@ -195,6 +199,8 @@ export function getUserPublicInfo() {
       usage: usage,
       prettyUsage: prettyUsage,
       createdAt: user.createdAt,
+      promptCountSinceStart: user.promptCountSinceStart,
+      tokenCountsSinceStart: user.tokenCountsSinceStart,
       lastUsedAt: user.lastUsedAt || "never",
       isBanned: user.disabledAt ? true : false,
     };
@@ -241,8 +247,11 @@ export function upsertUser(user: UserUpdate) {
   const existing: User = users.get(user.token) ?? {
     token: user.token,
     ip: [],
+    ipUsage: [],
     type: "normal",
     promptCount: 0,
+    promptCountSinceStart: 0,
+    tokenCountsSinceStart: { ...INITIAL_TOKENS },
     tokenCounts: { ...INITIAL_TOKENS },
     tokenLimits: { ...config.tokenQuota },
     createdAt: Date.now(),
@@ -272,12 +281,11 @@ export function upsertUser(user: UserUpdate) {
     }
   }
 
-  if (typeof updates.ipUsage === "undefined" && user.ip) {
-    updates.ipUsage = user.ip.reduce(
-      (prev, ip) => [...prev, { ip, prompt: 0 }],
-      [] as NonNullable<typeof user.ipUsage>
-    );
-  }
+  updates.ip = (user.ip ?? existing.ip ?? []).map((ip) => hashIp(ip));
+  updates.ipUsage = (user.ipUsage ?? existing.ipUsage ?? []).map((usage) => ({
+    ...usage,
+    ip: hashIp(usage.ip),
+  }));
 
   users.set(user.token, Object.assign(existing, updates));
   usersToFlush.add(user.token);
@@ -295,11 +303,14 @@ export function incrementPromptCount(token: string, ip: string) {
   const user = users.get(token);
   if (!user) return;
 
+  const hashedIp = hashIp(ip);
+
   user.promptCount++;
+  user.promptCountSinceStart++;
   if (typeof user.ipUsage === "undefined")
-    user.ipUsage = [{ ip, lastUsedAt: Date.now(), prompt: 1 }];
+    user.ipUsage = [{ ip: hashedIp, lastUsedAt: Date.now(), prompt: 1 }];
   else {
-    const ipUsage = user.ipUsage.find((usage) => usage.ip === ip)!;
+    const ipUsage = user.ipUsage.find((usage) => usage.ip === hashedIp)!;
 
     ipUsage.lastUsedAt = Date.now();
     ipUsage.prompt++;
@@ -320,6 +331,9 @@ export function incrementTokenCount(
   const modelFamily = getModelFamilyForQuotaUsage(model, api);
   const existing = user.tokenCounts[modelFamily] ?? 0;
   user.tokenCounts[modelFamily] = existing + consumption;
+  user.tokenCountsSinceStart[modelFamily] =
+    (user.tokenCountsSinceStart[modelFamily] ?? 0) + consumption;
+
   usersToFlush.add(token);
 }
 
@@ -336,7 +350,8 @@ export function authenticate(
   if (!user) return { result: "not_found" };
   if (user.disabledAt) return { result: "disabled" };
 
-  const newIp = !user.ip.includes(ip);
+  const hashedIp = hashIp(ip);
+  const newIp = !user.ip.includes(hashedIp);
 
   const userLimit = user.maxIps ?? config.maxIpsPerUser;
   const enforcedLimit =
@@ -344,19 +359,20 @@ export function authenticate(
 
   if (newIp && user.ip.length >= enforcedLimit) {
     if (config.maxIpsAutoBan) {
-      user.ip.push(ip);
+      user.ip.push(hashedIp);
       disableUser(token, "IP address limit exceeded.");
       return { result: "disabled" };
     }
     return { result: "limited" };
   } else if (newIp) {
-    user.ip.push(ip);
+    user.ip.push(hashedIp);
   }
 
-  if (typeof user.ipUsage === "undefined") user.ipUsage = [{ ip, prompt: 0 }];
+  if (typeof user.ipUsage === "undefined")
+    user.ipUsage = [{ ip: hashedIp, prompt: 0 }];
   else {
-    const data = user.ipUsage.find((usage) => usage.ip === ip);
-    if (!data) user.ipUsage.push({ ip, prompt: 0 });
+    const data = user.ipUsage.find((usage) => usage.ip === hashedIp);
+    if (!data) user.ipUsage.push({ ip: hashedIp, prompt: 0 });
   }
 
   user.lastUsedAt = Date.now();
@@ -483,6 +499,9 @@ async function initFirebase() {
     return;
   }
   for (const token in users) {
+    users[token].promptCountSinceStart = 0;
+    users[token].tokenCountsSinceStart = { ...INITIAL_TOKENS };
+
     upsertUser(users[token]);
   }
   usersToFlush.clear();
@@ -553,4 +572,9 @@ function getRefreshCrontab() {
     default:
       return config.quotaRefreshPeriod ?? "0 0 * * *";
   }
+}
+
+function hashIp(ip: string) {
+  if (ip.startsWith("ip")) return ip;
+  return `ip-${crypto.createHash("sha256").update(ip).digest("hex")}`;
 }

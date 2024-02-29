@@ -14,13 +14,13 @@ import { adminRouter } from "./admin/routes";
 import { proxyRouter } from "./proxy/routes";
 import { getBaseUrl, infoPageRouter } from "./info-page";
 import { userRouter } from "./user/routes";
-import { buildInfo } from "./service-info";
 import { logQueue } from "./shared/prompt-logging";
 import { start as startRequestQueue } from "./proxy/queue";
 import { init as initUserStore } from "./shared/users/user-store";
 import { init as initTokenizers } from "./shared/tokenization";
 import { checkOrigin } from "./proxy/check-origin";
 import { getRecentImages, getUsersData } from "./custom-info";
+import { buildInfo } from "./service-info";
 
 const PORT = config.port;
 const BIND_ADDRESS = config.bindAddress;
@@ -68,7 +68,7 @@ app.use(cors());
 app.use(checkOrigin);
 
 app.use("/admin", adminRouter);
-app.use("/proxy", proxyRouter);
+app.use(config.proxyEndpointRoute, proxyRouter);
 app.use("/user", userRouter);
 
 if (config.staticServiceInfo) {
@@ -98,7 +98,7 @@ app.get("/public", (req, res) => {
     return res.status(404).json({ error: { message: "Not Found" } });
 
   const baseUrl = getBaseUrl(req);
-  const info = buildInfo(baseUrl + "/proxy");
+  const info = buildInfo(baseUrl + config.proxyEndpointRoute);
   const userPublicData = getUsersData();
   const recentImages = getRecentImages();
 

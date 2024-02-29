@@ -1,0 +1,166 @@
+<%- include("partials/shared_header", { title: "View Key - OAI Reverse Proxy Admin" }) %>
+<style>
+  .valid {
+    color: green;
+  }
+
+  .invalid {
+    color: red;
+  }
+
+	table {
+		flex-grow: 0;
+	}
+</style>
+
+<h1>View Key</h1>
+
+<div style="display: flex; row-gap: 1rem; flex-direction: column;">
+	<div>
+		<table class="striped">
+			<thead>
+				<tr>
+					<th scope="col">Key</th>
+					<th scope="col" colspan="2">Value</th>
+				</tr>
+			</thead>
+		
+			<tbody>
+				<tr>
+					<th>Hash</th>
+					<td colspan="2"><%- key.hash %></td>
+				</tr>
+		
+				<% if (key.service === "openai") { %>
+					<tr>
+						<th>Org Id</th>
+						<td colspan="2"><%= key.organizationId %></td>
+					</tr>
+				<% } %>
+		
+				<tr>
+					<th>Models</th>
+					<td colspan="2"><%= key.modelFamilies.join(", ") %></td>
+				</tr>
+		
+				<tr>
+					<th>Working</th>
+					<td colspan="2" class="<%= !key.isDisabled ? "valid" : "invalid" %>"><%= !key.isDisabled %></td>
+				</tr>
+		
+				<% if (key.service === "openai") { %>
+					<tr>
+						<th>Trial</th>
+						<td colspan="2" class="<%= key.isTrial ? "valid" : "invalid" %>"><%= key.isTrial %></td>
+					</tr>
+		
+					<tr>
+						<th>Over Quota</th>
+						<td colspan="2" class="<%= key.isOverQuota ? "valid" : "invalid" %>"><%= key.isOverQuota %></td>
+					</tr>
+				<% } %>
+		
+				<% if (key.service === "anthropic") { %>
+					<tr>
+						<th>Over Quota</th>
+						<td colspan="2" class="<%= key.isOverQuota ? "valid" : "invalid" %>"><%= key.isOverQuota %></td>
+					</tr>
+		
+					<tr>
+						<th>Is Pozzed</th>
+						<td colspan="2" class="<%= key.isPozzed ? "valid" : "invalid" %>"><%= key.isPozzed %></td>
+					</tr>
+				<% } %>
+		
+				<tr>
+					<th>Is Revoked</th>
+					<td colspan="2" class="<%= key.isRevoked ? "valid" : "invalid" %>"><%= key.isRevoked %></td>
+				</tr>
+		
+				<tr>
+					<th>Last Used</th>
+					<td colspan="2"><%= key.lastUsed %></td>
+				</tr>
+		
+				<tr>
+					<th>Last Checked</th>
+					<td colspan="2"><%= key.lastChecked %></td>
+				</tr>
+
+				<tr>
+					<th>Ratelimit At</th>
+					<td colspan="2"><%= key.rateLimitedAt %></td>
+				</tr>
+
+				<% if (key.service === "openai") { %>
+					<tr>
+						<th>Ratelimit Requests Reset</th>
+						<td colspan="2"><%= key.rateLimitRequestsReset %></td>
+					</tr>
+
+					<tr>
+						<th>Ratelimit Tokens Reset</th>
+						<td colspan="2"><%= key.rateLimitTokensReset %></td>
+					</tr>
+				<% } %>
+
+				<% if (key.service === "anthropic") { %>
+					<tr>
+						<th>Ratelimit Until</th>
+						<td colspan="2"><%= key.rateLimitedUntil %></td>
+					</tr>
+				<% } %>
+
+				<% if (key.service === "aws") { %>
+					<tr>
+						<th>Ratelimit Until</th>
+						<td colspan="2"><%= key.rateLimitedUntil %></td>
+					</tr>
+
+					<tr>
+						<th>Logging Status</th>
+						<td colspan="2"><%= key.awsLoggingStatus %></td>
+					</tr>
+				<% } %>
+			</tbody>
+		</table>
+	</div>
+	
+	<div>
+		<table>
+			<thead>
+				<tr>
+					<th scope="col">Key</th>
+					<th scope="col" colspan="2">Value</th>
+				</tr>
+			</thead>
+		
+			<tbody>
+				<tr>
+					<th>Prompts Count</th>
+					<td colspan="2"><%= key.promptCount %></td>
+				</tr>
+
+				<% if (key.service === "openai") { %>
+					<tr>
+						<th>GPT 4 RPM</th>
+						<td colspan="2"><%= key.gpt4Rpm %></td>
+					</tr>
+				<% } %>
+
+				<% Object.keys(key).filter((key) => key.endsWith("Tokens")).forEach(model => { %>
+					<tr>
+						<th><%= model %></th>
+						<td colspan="2"><%= key[model] %></td>
+					</tr>
+				<% }); %>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<p><a href="/admin/manage/key-manager?service=<%= key.service %>">Back to Key Manager</a></p>
+
+<script></script>
+
+<%- include("partials/admin-footer") %>

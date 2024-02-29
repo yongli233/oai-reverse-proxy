@@ -264,17 +264,29 @@ router.get("/key-manager", (req, res) => {
     const a = structuredClone(_a);
     const b = structuredClone(_b);
 
-    if (req.query.service === "openai") {
+    if (a.service === "openai" && b.service === "openai") {
       Object.assign(a, {
         isWorking: !a.isDisabled,
         gpt4: a.modelFamilies.includes("gpt4"),
         "gpt4-32k": a.modelFamilies.includes("gpt4-32k"),
+        tokenCount: Object.keys(a)
+          .filter((key) => key.endsWith("Tokens"))
+          .reduce(
+            (prev, model) => prev + (a[model as keyof typeof a] as number),
+            0
+          ),
       });
 
       Object.assign(b, {
         isWorking: !b.isDisabled,
         gpt4: b.modelFamilies.includes("gpt4"),
         "gpt4-32k": b.modelFamilies.includes("gpt4-32k"),
+        tokenCount: Object.keys(b)
+          .filter((key) => key.endsWith("Tokens"))
+          .reduce(
+            (prev, model) => prev + (b[model as keyof typeof b] as number),
+            0
+          ),
       });
     }
 
@@ -282,6 +294,16 @@ router.get("/key-manager", (req, res) => {
   });
 
   return res.render("admin_key-manager", { keys });
+});
+
+router.get("/view-key/:service/:hash", (req, res) => {
+  const keyProvider = keyPool.getKeyProvider(req.params.service as LLMService);
+  if (!keyProvider) throw new HttpError(404, "Service not found");
+
+  const key = keyProvider.list().find((k) => k.hash === req.params.hash);
+  if (!key) throw new HttpError(404, "Key not found");
+
+  return res.render("admin_view-key", { key });
 });
 
 router.post("/key-manager/add-keys", (req, res) => {

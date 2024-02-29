@@ -21,8 +21,9 @@ const MODEL_FAMILY_FRIENDLY_NAME: { [f in ModelFamily]: string } = {
   claude: "Claude",
   "gemini-pro": "Gemini Pro",
   "mistral-tiny": "Mistral 7B",
-  "mistral-small": "Mixtral 8x7B",
-  "mistral-medium": "Mistral Medium (prototype)",
+  "mistral-small": "Mixtral Small", // Originally 8x7B, but that now refers to the older open-weight version. Mixtral Small is a newer closed-weight update to the 8x7B model.
+  "mistral-medium": "Mistral Medium",
+  "mistral-large": "Mistral Large",
   "aws-claude": "AWS Claude",
   "azure-turbo": "Azure GPT-3.5 Turbo",
   "azure-gpt4": "Azure GPT-4",
@@ -54,7 +55,7 @@ export const handleInfoPage = (req: Request, res: Response) => {
   const baseUrl = getBaseUrl(req);
   const isCustomPage = fs.existsSync("./public/info.html");
 
-  const info = buildInfo(baseUrl + "/proxy");
+  const info = buildInfo(baseUrl + config.proxyEndpointRoute);
   infoPageHtml = isCustomPage ? renderCustomPage(info) : renderPage(info);
   infoPageLastUpdated = Date.now();
 

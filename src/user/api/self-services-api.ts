@@ -1,7 +1,7 @@
 import { Router } from "express";
 
 import { config } from "../../config";
-import { UserPartialSchema } from "../../shared/users/schema";
+import { type User, UserPartialSchema } from "../../shared/users/schema";
 import * as userStore from "../../shared/users/user-store";
 import { sanitizeAndTrim } from "../../shared/utils";
 
@@ -11,7 +11,7 @@ const router = Router();
 
 router.post("/lookup", (req, res) => {
   const token = req.body.token ?? "";
-  const user = structuredClone(userStore.getUser(token));
+  const user = structuredClone(userStore.getUser(token)) as Partial<User>;
 
   req.log.info(
     { token: truncateToken(token), success: !!user },
@@ -24,7 +24,7 @@ router.post("/lookup", (req, res) => {
   delete user.adminNote;
   delete user.ipUsage;
 
-  return res.json({ ...user, ip: user.ip.length });
+  return res.json({ ...user, ip: user.ip!.length });
 });
 
 router.post("/edit-nickname", (req, res) => {

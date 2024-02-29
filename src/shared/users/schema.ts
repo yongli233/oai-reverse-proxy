@@ -19,15 +19,13 @@ export const UserSchema = z
     token: z.string(),
     /** IP addresses the user has connected from. */
     ip: z.array(z.string()),
-    ipUsage: z
-      .array(
-        z.object({
-          ip: z.string(),
-          prompt: z.number(),
-          lastUsedAt: z.number().optional(),
-        })
-      )
-      .optional(),
+    ipUsage: z.array(
+      z.object({
+        ip: z.string(),
+        prompt: z.number(),
+        lastUsedAt: z.number().optional(),
+      })
+    ),
     /** User's nickname. */
     nickname: z.string().max(80).optional(),
     /**
@@ -62,6 +60,11 @@ export const UserSchema = z
     maxIps: z.coerce.number().int().min(0).optional(),
     /** Private note about the user. */
     adminNote: z.string().optional(),
+
+    /** Number of tokens the user has consumed since start, by model family. */
+    tokenCountsSinceStart: tokenCountsSchema,
+    /** Number of prompts the user has made since start. */
+    promptCountSinceStart: z.number(),
   })
   .strict();
 

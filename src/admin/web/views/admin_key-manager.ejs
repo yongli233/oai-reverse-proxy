@@ -281,10 +281,13 @@
           <th><a data-sort="gpt4-32k"> GPT 4 32K </a></th>
           <th><a data-sort="isOverQuota"> Over Quota </a></th>
           <% } else if (service === "anthropic") { %>
-          <th><a data-sort="isPozzed">Pozzed</a></th>
-          <% } %>
+          <th><a data-sort="isPozzed"> Pozzed </a></th>
+					<th><a data-sort="isOverQuota"> Over Quota </a></th>
+          <% } else if (service === "aws") { %>
+					<th class="text-center"><a class="block text-center" data-sort="awsLoggingStatus">Logging Status</a></th>
+					<% } %>
 
-          <th><a data-sort="isRevoked">Is Revoked</a></th>
+          <th><a data-sort="isRevoked"> Is Revoked </a></th>
           <th>Remove</th>
         </tr>
       </thead>
@@ -292,7 +295,7 @@
       <tbody>
         <% keys.filter((key) => key.service === service).forEach(key => { %>
         <tr>
-          <td><%= key.hash %></td>
+          <td><a href="/admin/manage/view-key/<%= service %>/<%= key.hash %>"><%= key.hash %></a></td>
 
           <td class="<%= !key.isDisabled ? 'valid' : 'invalid' %>"><%= !key.isDisabled %></td>
 
@@ -304,7 +307,10 @@
 
           <% } else if (service === "anthropic") { %>
           <td class="<%= key.isPozzed ? 'valid' : 'invalid' %>"><%= key.isPozzed %></td>
-          <% } %>
+					<td class="<%= key.isOverQuota ? 'valid' : 'invalid' %>"><%= key.isOverQuota %></td>
+          <% } else if (service === "aws") { %>
+					<td class="text-center <%= key.awsLoggingStatus === "disabled" ? 'valid' : 'invalid' %>"><%= key.awsLoggingStatus %></td>
+					<% } %>
 
           <td class="<%= key.isRevoked ? 'valid' : 'invalid' %>"><%= key.isRevoked %></td>
 

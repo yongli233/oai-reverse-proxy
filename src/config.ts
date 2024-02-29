@@ -262,6 +262,11 @@ type Config = {
    * risk.
    */
   allowOpenAIToolUsage?: boolean;
+  /**
+   * Allows overriding the default proxy endpoint route. Defaults to /proxy.
+   * A leading slash is required.
+   */
+  proxyEndpointRoute: string;
 };
 
 // To change configs, create a file called .env in the root directory.
@@ -309,6 +314,7 @@ export const config: Config = {
     "mistral-tiny",
     "mistral-small",
     "mistral-medium",
+    "mistral-large",
     "aws-claude",
     "azure-turbo",
     "azure-gpt4",
@@ -360,6 +366,7 @@ export const config: Config = {
   numberOfImages: getEnvWithDefault("NUMBER_OF_IMAGES", 12),
   trustedProxies: getEnvWithDefault("TRUSTED_PROXIES", 1),
   allowOpenAIToolUsage: getEnvWithDefault("ALLOW_OPENAI_TOOL_USAGE", false),
+  proxyEndpointRoute: getEnvWithDefault("PROXY_ENDPOINT_ROUTE", "/proxy"),
 } as const;
 
 function generateCookieSecret() {
@@ -454,7 +461,6 @@ export const SENSITIVE_KEYS: (keyof Config)[] = ["googleSheetsSpreadsheetId"];
  */
 export const OMITTED_KEYS = [
   "port",
-  "bindAddress",
   "logLevel",
   "openaiKey",
   "anthropicKey",
@@ -487,6 +493,7 @@ export const OMITTED_KEYS = [
   "maxIpsAutoBan",
   "trustedProxies",
   "bindAddress",
+  "proxyEndpointRoute",
 ] satisfies (keyof Config)[];
 type OmitKeys = (typeof OMITTED_KEYS)[number];
 
