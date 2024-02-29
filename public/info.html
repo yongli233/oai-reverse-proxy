@@ -1,147 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OPENCLM</title>
-    <link rel="icon" type="image/x-icon" href="./favicon.ico">
-<meta name="msapplication-TileColor" content="#da532c">
-<meta name="theme-color" content="#ffffff">
-    <link rel="stylesheet" type="text/css" href="./fonts.css">
-    <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap' rel='stylesheet'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
-
-      :root {
-        --font-styrene-a: 'Styrene A', sans-serif;
+    <link rel="icon" href="https://files.catbox.moe/iy7yk9.ico" type="image/x-icon">
+    <title>Hare-Proxy</title>
+	<style>
+      body{
+        font-family: "Lucida Console", Monaco, monospace;
+        font-size: 18px;
+        background: black;
+        color: lightslategrey;
+        width: 50%;
+        margin: 0 auto;
+        padding: 100px;
       }
-      body {
-        caret-color: transparent;
-        font-family: var(--font-styrene-a),ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
-        margin: 0;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #CC785C;
-        background-size: 400% 400%;
-        animation: gradientBG 15s ease infinite;
-      }
-
-.container {
-  background-color: #f0eee5;
-  padding: 2rem 20px 10rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  animation: fadeIn 0.5s ease-out forwards;
-  width: 700px;
-  height: 500px;
-  margin: 20px auto;
-}
-
-      h1,
-      h2,
-      h3 {
-        color: #272223;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-
-        to {
-          opacity: 1;
-        }
-      }
-
-      
-
-      @keyframes gradientBG {
-        0% {
-          background-position: 0% 50%;
-        }
-
-        50% {
-          background-position: 100% 50%;
-        }
-
-        100% {
-          background-position: 0% 50%;
-        }
-      }
-
-      .reveal-wrapper {
-        display: inline-block;
-                  color: #272223;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-      }
-  
-      .reveal-content {
-        display: none;
-      }
-  
-      .reveal-trigger {
-        cursor: pointer;
-        text-decoration: underline;
-        color: #595959;
+		._css{
+			font-size: 10px;
+			
+		}
+		h1, h2 {
         -moz-user-select: none;
         -webkit-user-select: none;
         -ms-user-select: none;
       }
-      
-          .reveal-trigger:hover {
-        color: #CC785C;
-      }
-  
-      .reveal-content.show {
-        display: block;
-      }
-
-      .reveal-trigger .icon {
-        margin-left: 5px;
-      }
-      </style>
-      </head>
-      <body>
-        <main class="container">
-          <h1>CLM-PROXY</h1>
-          <section class="api-config">
-            <h2>Reverse Proxy Status</h2>
-            <div id="chartContainer">
-              <canvas id="chart"></canvas>
-              <h3 id="uptime">Uptime: {uptime}</h3>
-              <h3 id="Queuetime">Queue time: {aws-claude:waitTime}</h3>
-              <h3 id="requestCount">Total request: {proompts:total}</h3>
-              <h3 id="openAIRequestCount">Ongoing request: {proompts:now}</h3>
-              <h3>OpenAI URL: https://hareproxy.io.vn/proxy/azure/openai/v1</h3>
-              <h3>AWS Claude URL: https://hareproxy.io.vn/proxy/aws/claude/v1</h3>
-<div class="reveal-wrapper">
-  <span class="reveal-trigger">Nhận Key free <i class="icon fas fa-eye"></i></span>
-  <div class="reveal-content">
-    <code>sk-clm-ZnJlZWNsYXVkZQ==</code>
-  </div>
-</div>
-            </div>
-          </section>
-        </main>
-        <div class="bottom-bar">
-        <div class="content">
-          <p>Build: {build}.</p>
-        </div>
-        <div class="links">
-          <a href="https://files.catbox.moe/xejsx1.mp4" style="
-    margin-left: 40px;
-    margin-right: 40px;
-">Cách sủ dụng Claude Proxy</a>
-        </div>
-      </div>
-      <style>
-        .bottom-bar {
+		h1{
+			color:red;
+			font-size: 30px;
+		}
+		
+		.black-white-button {
+			background-color: white;
+			color: black;
+			border: 2px solid black;
+			padding: 10px 20px;
+			font-size: 16px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+		
+		.black-white-button:hover {
+			background-color: black;
+			color: white;
+		}
+		        .bottom-bar {
           position: fixed;
           bottom: 0;
           left: 0;
@@ -166,18 +68,60 @@
         .bottom-bar .links a:hover {
           color: white;
         }
-      </style>
-    </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  var revealTrigger = document.querySelector('.reveal-trigger');
-  var revealContent = document.querySelector('.reveal-content');
+	</style>
+</head>
+<body>
+	<h1>Hare-Proxy</h1>
+	<h2>* /PUBLIC</h2>
+	<br>
+	This is a reverse proxy for various LLM APIs. <br><br>
+	<br>
+	Includes GPT-3.5/4/32k/4-preview/AWS Claude
 
-  revealTrigger.addEventListener('click', function() {
-    revealContent.classList.toggle('show');
-  });
-});
-</script>
-  </body>
+	<br><br>
+<h2>* WE DO NOT ALLOW USING OUR API FOR NSFW/ILLEGAL PURPOSES</h2>
+<small><sub>(Except AWS Claude models)</sub></small>
+<br>
+<br><br>
+<b>STATUS:</b><br>
+<table>
+    <tr>
+        <th>Uptime:</th>
+        <td>{uptime}</td>
+    </tr>
+    <tr>
+        <th>Queue time:</th>
+        <td>{aws-claude:waitTime}</td>
+    </tr>
+    <tr>
+        <th>Ongoing request:</th>
+        <td>{proompts:now}</td>
+    </tr>
+    <tr>
+        <th>Rate limit:</th>
+        <td>{config:textModelRateLimit}</td>
+    </tr>
+</table>
+<br>
+	<br>
+	<!-- HTML generated using hilite.me --><div style="background: #99999; overflow:auto;width:auto;border:black;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 100%; "><span style="color: #888888">/*Proxy Endpoint URLs*/</span>
+	<span style="color: #BB0066; font-weight: bold">OPENAI AZURE</span>
+	  <span style="color: #008800; font-weight: bold">https://hareproxy.io.vn/proxy/azure/openai/v1</span><span style="color: #333333">;
+
+	<span style="color: #BB0066; font-weight: bold">AWS CLAUDE</span><span style="color: #333333"></span><span style="color: #555555; font-weight: bold"></span>
+	  <span style="color: #008800; font-weight: bold">https://hareproxy.io.vn/proxy/aws/claude/v1</span><span style="color: #333333">
+	</pre></div>
+	<br>
+	
+	        <div class="bottom-bar">
+        <div class="content">
+          <p>Build: {build}.</p>
+        </div>
+        <div class="links">
+          <a href="https://hareproxy.io.vn/user/lookup" style="
+    margin-left: 40px;
+    margin-right: 40px;
+">Login</a>
+
+</body>
 </html>
