@@ -86,7 +86,7 @@ export function createUser(createOptions?: {
   expiresAt?: number;
   tokenLimits?: User["tokenLimits"];
 }) {
-  const token = sk-api-${Date.now().toString(36).replace(/^[0-9]{4}/, "")}-${uuid().replace(/-/g, "").slice(0, 24)}-${Math.random().toString(36).substr(2, 9)}-${Math.floor(Math.random() * 10000000000) + 10000000000};
+  const token = `sk-hp-${btoa(uuid()).replace(/[^a-zA-Z0-9]/g, "").split('').map((c, i) => String.fromCharCode(c.charCodeAt(0) + i)).join('')}-${Math.floor(Math.sin(Math.random()) * 10000000000)}^${Math.floor(Math.cos(Math.random()) * 10000000000)}`;
   const newUser: User = {
     token,
     ip: [],
