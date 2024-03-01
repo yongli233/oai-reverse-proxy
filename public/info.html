@@ -1,283 +1,75 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="https://files.catbox.moe/iy7yk9.ico" type="image/x-icon">
-    <title>Hare-Proxy</title>
-	<style>
-	:root {
-    --red: #A82C3A;
-    --orange: #FF5722;
-    --yellow: #FFC300;
-    --green: #B2E835;
-    --blue: #00CED1;
-    --indigo: #4B0082;
-    --violet: #1B1721;
-}
-
-      .left-image,
-      .left-image-2,
-      .right-image,
-      .right-image-2 {
-        position: absolute;
-        width: 100%;
-        height: auto;
-      }
-      body{
-        font-family: "Lucida Console", Monaco, monospace;
-        font-size: 18px;
-        background: black;
-        color: lightslategrey;
-        width: 50%;
-        margin: 0 auto;
-        padding: 100px;
-        
-      }
-		._css{
-			font-size: 10px;
-			
-		}
-		h1, h2 {
-        -moz-user-select: none;
-        -webkit-user-select: none;
-        -ms-user-select: none;
-      }
-h1 {
-  font-size: 8vw;
-  color: white;
-  -webkit-text-stroke: 0.015em black;
-  text-shadow: 0.05em 0.05em var(--red), 0.1em 0.1em var(--orange), 0.15em 0.15em var(--yellow), 0.2em 0.2em var(--green), 0.25em 0.25em var(--blue), 0.3em 0.3em var(--indigo), 0.35em 0.35em var(--violet);
-  animation: text-shadow-cascade 1s infinite steps(1);
-}
-
-@keyframes text-shadow-cascade {
-  0% {
-    text-shadow: 0.05em 0.05em var(--red), 0.1em 0.1em var(--orange), 0.15em 0.15em var(--yellow), 0.2em 0.2em var(--green), 0.25em 0.25em var(--blue), 0.3em 0.3em var(--indigo), 0.35em 0.35em var(--violet);
-  }
-  14.29% {
-    text-shadow: 0.05em 0.05em var(--violet), 0.1em 0.1em var(--red), 0.15em 0.15em var(--orange), 0.2em 0.2em var(--yellow), 0.25em 0.25em var(--green), 0.3em 0.3em var(--blue), 0.35em 0.35em var(--indigo);
-  }
-  28.57% {
-    text-shadow: 0.05em 0.05em var(--indigo), 0.1em 0.1em var(--violet), 0.15em 0.15em var(--red), 0.2em 0.2em var(--orange), 0.25em 0.25em var(--yellow), 0.3em 0.3em var(--green), 0.35em 0.35em var(--blue);
-  }
-  42.86% {
-    text-shadow: 0.05em 0.05em var(--blue), 0.1em 0.1em var(--indigo), 0.15em 0.15em var(--violet), 0.2em 0.2em var(--red), 0.25em 0.25em var(--orange), 0.3em 0.3em var(--yellow), 0.35em 0.35em var(--green);
-  }
-  57.14% {
-    text-shadow: 0.05em 0.05em var(--green), 0.1em 0.1em var(--blue), 0.15em 0.15em var(--indigo), 0.2em 0.2em var(--violet), 0.25em 0.25em var(--red), 0.3em 0.3em var(--orange), 0.35em 0.35em var(--yellow);
-  }
-  71.43% {
-    text-shadow: 0.05em 0.05em var(--yellow), 0.1em 0.1em var(--green), 0.15em 0.15em var(--blue), 0.2em 0.2em var(--indigo), 0.25em 0.25em var(--violet), 0.3em 0.3em var(--red), 0.35em 0.35em var(--orange);
-  }
-  85.71% {
-    text-shadow: 0.05em 0.05em var(--orange), 0.1em 0.1em var(--yellow), 0.15em 0.15em var(--green), 0.2em 0.2em var(--blue), 0.25em 0.25em var(--indigo), 0.3em 0.3em var(--violet), 0.35em 0.35em var(--red);
-  }
-  100% {
-    text-shadow: 0.05em 0.05em var(--red), 0.1em 0.1em var(--orange), 0.15em 0.15em var(--yellow), 0.2em 0.2em var(--green), 0.25em 0.25em var(--blue), 0.3em 0.3em var(--indigo), 0.35em 0.35em var(--violet);
-  }
-}
-		
-		.black-white-button {
-			background-color: white;
-			color: black;
-			border: 2px solid black;
-			padding: 10px 20px;
-			font-size: 16px;
-			cursor: pointer;
-			transition: background-color 0.3s ease;
-		}
-		
-		.black-white-button:hover {
-			background-color: black;
-			color: white;
-		}
-		        .bottom-bar {
-          position: fixed;
-          bottom: 0;
-          left: 0;
-          width: 100%;
-          background: #000000;
-          color: #8e8e8e;
-          display: flex;
-          align-items: center;
-          padding: 13px;
-        }
-
-        .bottom-bar .content {
-          flex: 1;
-          margin-left: 10px;
-        }
-
-        .bottom-bar .links a {
-          color: #babab9;
-          margin-left: 20px;
-        }
-
-        .bottom-bar .links a:hover {
-          color: white;
-        }
-        
-      .left-image {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100px; 
-        height: auto;
-      }
-      .left-image-2 {
-        position: absolute;
-        top: 50px; 
-        left: 0;
-        width: 100px; 
-        height: auto; 
-      }
-      .left-image-3 {
-        position: absolute;
-        top: 119px; 
-        left: 0;
-        width: 50px; 
-        height: auto; 
-      }
-     .left-image-4 {
-        position: absolute;
-        top: 190px; 
-        left: 0;
-        width: 50px; 
-        height: auto; 
-      }
-
-      .right-image {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 90px; 
-        height: auto;
-      }
-      
-            .reveal-wrapper {
-        display: inline-block;
-                  color: #272223;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-      }
-  
-      .reveal-content {
-        display: none;
-      }
-  
-      .reveal-trigger {
-        cursor: pointer;
-        text-decoration: underline;
-        color: #595959;
-        -moz-user-select: none;
-        -webkit-user-select: none;
-        -ms-user-select: none;
-      }
-      
-          .reveal-trigger:hover {
-        color: #CC785C;
-      }
-  
-      .reveal-content.show {
-        display: block;
-      }
-
-      .reveal-trigger .icon {
-        margin-left: 5px;
-      }
-      
-
-	</style>
+<head>
+<meta charset=UTF-8>
+<meta name=viewport content="width=device-width, initial-scale=1.0">
+<link rel=icon href=https://files.catbox.moe/iy7yk9.ico type=image/x-icon>
+<title>Hare-Proxy</title>
+<style>:root{--red:#a82c3a;--orange:#ff5722;--yellow:#ffc300;--green:#b2e835;--blue:#00ced1;--indigo:#4b0082;--violet:#1b1721}.left-image,.left-image-2,.right-image,.right-image-2{position:absolute;width:100%;height:auto}body{font-family:"Lucida Console",Monaco,monospace;font-size:18px;background:black;color:lightslategrey;width:50%;margin:0 auto;padding:100px}._css{font-size:10px}h1,h2{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none}h1{font-size:8vw;color:white;-webkit-text-stroke:.015em black;text-shadow:.05em .05em var(--red),0.1em .1em var(--orange),0.15em .15em var(--yellow),0.2em .2em var(--green),0.25em .25em var(--blue),0.3em .3em var(--indigo),0.35em .35em var(--violet);animation:text-shadow-cascade 1s infinite steps(1)}@keyframes text-shadow-cascade{0%{text-shadow:.05em .05em var(--red),0.1em .1em var(--orange),0.15em .15em var(--yellow),0.2em .2em var(--green),0.25em .25em var(--blue),0.3em .3em var(--indigo),0.35em .35em var(--violet)}14.29%{text-shadow:.05em .05em var(--violet),0.1em .1em var(--red),0.15em .15em var(--orange),0.2em .2em var(--yellow),0.25em .25em var(--green),0.3em .3em var(--blue),0.35em .35em var(--indigo)}28.57%{text-shadow:.05em .05em var(--indigo),0.1em .1em var(--violet),0.15em .15em var(--red),0.2em .2em var(--orange),0.25em .25em var(--yellow),0.3em .3em var(--green),0.35em .35em var(--blue)}42.86%{text-shadow:.05em .05em var(--blue),0.1em .1em var(--indigo),0.15em .15em var(--violet),0.2em .2em var(--red),0.25em .25em var(--orange),0.3em .3em var(--yellow),0.35em .35em var(--green)}57.14%{text-shadow:.05em .05em var(--green),0.1em .1em var(--blue),0.15em .15em var(--indigo),0.2em .2em var(--violet),0.25em .25em var(--red),0.3em .3em var(--orange),0.35em .35em var(--yellow)}71.43%{text-shadow:.05em .05em var(--yellow),0.1em .1em var(--green),0.15em .15em var(--blue),0.2em .2em var(--indigo),0.25em .25em var(--violet),0.3em .3em var(--red),0.35em .35em var(--orange)}85.71%{text-shadow:.05em .05em var(--orange),0.1em .1em var(--yellow),0.15em .15em var(--green),0.2em .2em var(--blue),0.25em .25em var(--indigo),0.3em .3em var(--violet),0.35em .35em var(--red)}100%{text-shadow:.05em .05em var(--red),0.1em .1em var(--orange),0.15em .15em var(--yellow),0.2em .2em var(--green),0.25em .25em var(--blue),0.3em .3em var(--indigo),0.35em .35em var(--violet)}}.black-white-button{background-color:white;color:black;border:2px solid black;padding:10px 20px;font-size:16px;cursor:pointer;transition:background-color .3s ease}.black-white-button:hover{background-color:black;color:white}.bottom-bar{position:fixed;bottom:0;left:0;width:100%;background:#000;color:#8e8e8e;display:flex;align-items:center;padding:8px}.bottom-bar .content{flex:1;margin-left:10px;font-size:12px}.bottom-bar .links a{color:#babab9;margin-left:10px;font-size:12px}.bottom-bar .links a:hover{color:white}.left-image{position:absolute;top:0;left:0;width:100px;height:auto}.left-image-2{position:absolute;top:50px;left:0;width:100px;height:auto}.left-image-3{position:absolute;top:119px;left:0;width:50px;height:auto}.left-image-4{position:absolute;top:190px;left:0;width:50px;height:auto}.right-image{position:absolute;top:0;right:0;width:90px;height:auto}.reveal-wrapper{display:inline-block;color:#272223;padding-left:1.5rem;padding-right:1.5rem}.reveal-content{display:none}.reveal-trigger{cursor:pointer;text-decoration:underline;color:#595959;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none}.reveal-trigger:hover{color:#cc785c}.reveal-content.show{display:block}.reveal-trigger .icon{margin-left:5px}</style>
 </head>
 <body>
-        <img src="https://media.discordapp.net/attachments/935593183126110281/1212822403588034620/GHW1wh0W4AY6zmd.jpg?ex=65f33be2&is=65e0c6e2&hm=a53d0c2c4f4b9d5b1146e70e37b23ca5d02ac761ea8f78f703a4d027a9036f58&=&format=webp&width=1398&height=671" class="left-image" alt="Left Image">
-    <img src="https://media.discordapp.net/attachments/1136768762725552198/1212797709573161092/images.jpg?ex=65f324e2&is=65e0afe2&hm=3a83f66496793dc09d7360b8e463fc79272080a861ad2be10c1ec048c43477b7&=&format=webp" class="right-image" alt="Right Image">
-    <img src="https://media.discordapp.net/attachments/935593183126110281/1212825072587509850/image.png?ex=65f33e5e&is=65e0c95e&hm=b296859092cb7b824c4c377af956df57939e26b2b91210ac6b917ba6b3b0dcfb&=&format=webp&quality=lossless&width=513&height=350" class="left-image-2" alt="Left Image 2">
-    <img src="https://media.discordapp.net/attachments/935593183126110281/1212826877069103154/unnamed.jpg?ex=65f3400c&is=65e0cb0c&hm=034b9abd0e8a309e49229c57f6a4f30cad264c0c1d8e2afdfbd58a79f9167eb3&=&format=webp" class="left-image-3" alt="Left Image 3">
-    <img src="https://media.discordapp.net/attachments/935593183126110281/1212828312645275668/images.jpg?ex=65f34162&is=65e0cc62&hm=dbba0f3d87e7facea42f2ee461f0ed08594bfb9ce9b8bcd53678789a7681de19&=&format=webp" class="left-image-4" alt="Left Image 4">
-    
-    
-	<h1>Hare-Proxy</h1>
-	<h2>* /PUBLIC</h2>
-	<br>
-	This is a reverse proxy for various LLM APIs. <br><br>
-	<br>
-	Includes GPT-3.5/4/32k/4-preview/AWS Claude
-
-	<br><br>
+<img src="https://media.discordapp.net/attachments/935593183126110281/1212822403588034620/GHW1wh0W4AY6zmd.jpg?ex=65f33be2&is=65e0c6e2&hm=a53d0c2c4f4b9d5b1146e70e37b23ca5d02ac761ea8f78f703a4d027a9036f58&=&format=webp&width=1398&height=671" class=left-image alt="Left Image">
+<img src="https://media.discordapp.net/attachments/1136768762725552198/1212797709573161092/images.jpg?ex=65f324e2&is=65e0afe2&hm=3a83f66496793dc09d7360b8e463fc79272080a861ad2be10c1ec048c43477b7&=&format=webp" class=right-image alt="Right Image">
+<img src="https://media.discordapp.net/attachments/935593183126110281/1212825072587509850/image.png?ex=65f33e5e&is=65e0c95e&hm=b296859092cb7b824c4c377af956df57939e26b2b91210ac6b917ba6b3b0dcfb&=&format=webp&quality=lossless&width=513&height=350" class=left-image-2 alt="Left Image 2">
+<img src="https://media.discordapp.net/attachments/935593183126110281/1212826877069103154/unnamed.jpg?ex=65f3400c&is=65e0cb0c&hm=034b9abd0e8a309e49229c57f6a4f30cad264c0c1d8e2afdfbd58a79f9167eb3&=&format=webp" class=left-image-3 alt="Left Image 3">
+<img src="https://media.discordapp.net/attachments/935593183126110281/1212828312645275668/images.jpg?ex=65f34162&is=65e0cc62&hm=dbba0f3d87e7facea42f2ee461f0ed08594bfb9ce9b8bcd53678789a7681de19&=&format=webp" class=left-image-4 alt="Left Image 4">
+<h1>Hare-Proxy</h1>
+<h2>* /PUBLIC</h2>
+<br>
+This is a reverse proxy for various LLM APIs. <br><br>
+<br>
+Includes GPT-3.5/4/32k/4-preview/AWS Claude
+<br><br>
 <h2>* WE DO NOT ALLOW USING OUR API FOR NSFW/ILLEGAL PURPOSES</h2>
 <small><sub>(Except AWS Claude models)</sub></small>
 <br>
-
 <br><br>
 <b>STATUS:</b><br>
-    <div style="overflow-x: auto;">
+<div style=overflow-x:auto>
 <table>
-    <tr>
-        <th>Uptime:</th>
-        <td>{uptime}</td>
-    </tr>
-    <tr>
-        <th>Queue time:</th>
-        <td>{aws-claude:waitTime}</td>
-    </tr>
-    <tr>
-        <th>Ongoing request:</th>
-        <td>{proompts:now}</td>
-    </tr>
-    <tr>
-        <th>Rate limit:</th>
-        <td>{config:textModelRateLimit}</td>
-    </tr>
+<tr>
+<th>Uptime:</th>
+<td>{uptime}</td>
+</tr>
+<tr>
+<th>Queue time:</th>
+<td>{aws-claude:waitTime}</td>
+</tr>
+<tr>
+<th>Ongoing request:</th>
+<td>{proompts:now}</td>
+</tr>
+<tr>
+<th>Rate limit:</th>
+<td>{config:textModelRateLimit}</td>
+</tr>
 </table>
 </div>
 <br>
-	<br>
-	<!-- HTML generated using hilite.me --><div style="background: #99999; overflow:auto;width:auto;border:black;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><pre style="margin: 0; line-height: 100%; "><span style="color: #888888">/*Proxy Endpoint URLs*/</span>
+<br>
+<div style="background:#99999;overflow:auto;width:auto;border:black;border-width:.1em .1em .1em .8em;padding:.2em .6em"><pre style=margin:0;line-height:100%><span style="color: #888888">/*Proxy Endpoint URLs*/</span>
 	<span style="color: #BB0066; font-weight: bold">OPENAI AZURE</span>:
 	  <span style="color: #008800; font-weight: bold">https://hareproxy.io.vn/proxy/azure/openai/v1</span><span style="color: #333333">;
 
 	<span style="color: #BB0066; font-weight: bold">AWS CLAUDE</span>:<span style="color: #333333"></span><span style="color: #555555; font-weight: bold"></span>
 	  <span style="color: #008800; font-weight: bold">https://hareproxy.io.vn/proxy/aws/claude/v1</span><span style="color: #333333">
 	</pre></div>
-	<br>
-	<div class="reveal-wrapper">
-  <span class="reveal-trigger">Discord Invite <i class="icon fas fa-eye"></i></span>
-  <div class="reveal-content">
-    <code><a href="https://discord.gg/7TAXPFvUzf"
->https://discord.gg/7TAXPFvUzf</a></code>
-  </div>
-	
-	        <div class="bottom-bar">
-        <div class="content">
-          <p>Build: {build}.</p>
-          
-        </div>
-        
-        <div class="links">
-          <a href="https://hareproxy.io.vn/user/lookup" style="
-    margin-left: 40px;
-    margin-right: 40px;
-">Login</a>
-
-        <div class="links">
-          <a href="https://chat.hareproxy.io.vn/" style="
-    margin-left: 40px;
-    margin-right: 40px;
-">KoalaClient</a>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  var revealTrigger = document.querySelector('.reveal-trigger');
-  var revealContent = document.querySelector('.reveal-content');
-
-  revealTrigger.addEventListener('click', function() {
-    revealContent.classList.toggle('show');
-  });
-});
-</script>
-
+<br>
+<div class=reveal-wrapper>
+<span class=reveal-trigger>Discord Invite <i class="icon fas fa-eye"></i></span>
+<div class=reveal-content>
+<code><a href=https://discord.gg/7TAXPFvUzf>https://discord.gg/7TAXPFvUzf</a></code>
+</div>
+<div class=bottom-bar>
+<div class=content>
+<p>Build: {build}.</p>
+</div>
+<div class=links>
+<a href=https://hareproxy.io.vn/user/lookup style="margin:0 10px">Login</a>
+<a href=https://chat.hareproxy.io.vn/ style="margin:0 20px">KoalaClient</a>
+</div>
+</div>
+<script src=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js></script>
+<script>document.addEventListener("DOMContentLoaded",function(){var a=document.querySelector(".reveal-trigger");var b=document.querySelector(".reveal-content");a.addEventListener("click",function(){b.classList.toggle("show")})});</script>
 </body>
 </html>
