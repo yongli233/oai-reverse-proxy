@@ -86,7 +86,7 @@ export function createUser(createOptions?: {
   expiresAt?: number;
   tokenLimits?: User["tokenLimits"];
 }) {
-  const token = `api-HP[0-9A-Z]{16}`;
+  const token = `hp-${uuid().replace(/-/g, "").slice(0, 24)}`
   const newUser: User = {
     token,
     ip: [],
