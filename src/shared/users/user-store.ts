@@ -86,7 +86,7 @@ export function createUser(createOptions?: {
   expiresAt?: number;
   tokenLimits?: User["tokenLimits"];
 }) {
-  const token = `sk-hp-${btoa(uuid()).replace(/[^a-zA-Z0-9]/g, "").split('').map((c, i) => String.fromCharCode(c.charCodeAt(0) + i)).join('')}-${Math.floor(Math.sin(Math.random()) * 10000000000)}^${Math.floor(Math.cos(Math.random()) * 10000000000)}`;
+  const token = `api-HP[0-9A-Z]{16}`;
   const newUser: User = {
     token,
     ip: [],
