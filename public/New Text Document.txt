@@ -202,7 +202,7 @@
 		#usersLeaderboard {
 			border-collapse: collapse;
 			width: 100%;
-			align-items: center
+			align-items: center;
 		}
 	</style>
 </head>
@@ -247,7 +247,7 @@
 	<br>
 	<br>
 	<div style="background:#99999;overflow:auto;width:auto;border:black;border-width:.1em .1em .1em .8em;padding:.2em .6em">
-<pre style=margin:0;line-height:100%><span style="color: #888888">/*Proxy Endpoint URLs*/</span>
+		<pre style=margin:0;line-height:100%><span style="color: #888888">/*Proxy Endpoint URLs*/</span>
 		<span style="color: #BB0066; font-weight: bold">OPENAI AZURE</span>:
 		<span style="color: #008800; font-weight: bold">https://api.hareproxy.io.vn/proxy/azure/openai/v1</span><span style="color: #333333">;
 
@@ -263,8 +263,10 @@
 		</div>
 	</div>
 	<br><br><br>
+
 	<h2>Leaderboard</h2>
-	<table id=usersLeaderboard style=text-align:center border=1>
+
+	<table id="usersLeaderboard" style="text-align: center;" border="1">
 		<thead>
 			<tr>
 				<th>Name</th>
@@ -275,29 +277,83 @@
 		<tbody>
 		</tbody>
 	</table>
+
+
 	<div class=bottom-bar>
 		<div class=content>
 			<p>Build: {build}.</p>
 		</div>
 		<div class=links>
-			<a href=/user/lookup style="margin:0 10px">Login</a>
+			<a href="/user/lookup" style="margin:0 10px">Login</a>
 			<a href=https://chat.hareproxy.io.vn/ style="margin:0 20px">KoalaClient</a>
 		</div>
 	</div>
 	<script src=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js></script>
 	<script>document.addEventListener("DOMContentLoaded", function () { var a = document.querySelector(".reveal-trigger"); var b = document.querySelector(".reveal-content"); a.addEventListener("click", function () { b.classList.toggle("show") }) });</script>
+
 	<script>
-	function formatDate(dateString) {
-			if (!dateString || dateString === 'never') { return 'Never used'; }
-			const date = new Date(dateString); return isNaN(date.getTime()) ? 'Never used' : date.toLocaleString();
+		function formatDate(dateString) {
+			if (!dateString || dateString === 'never') {
+				return 'Never used';
+			}
+
+			const date = new Date(dateString);
+			return isNaN(date.getTime()) ? 'Never used' : date.toLocaleString();
 		}
-		function timeAgo(dateString) { let timeDifference = +new Date() - new Date(dateString); const second = 1000, minute = second * 60, hour = minute * 60, day = hour * 24, week = day * 7; if (timeDifference < minute) { return Math.round(timeDifference / second) + " seconds ago"; } else if (timeDifference < hour) { return Math.round(timeDifference / minute) + " minutes ago"; } else if (timeDifference < day) { return Math.round(timeDifference / hour) + " hours ago"; } else if (timeDifference < week) { return Math.round(timeDifference / day) + " days ago"; } else { return formatDate(dateString); } }
-		const userData = JSON.parse('{user:publicData}'); const leaderboard = document.getElementById("usersLeaderboard"); userData.forEach(user => {
-			const row = document.createElement('tr'); const propertiesToDisplay = ['name', 'prompts', 'lastUsedAt']; propertiesToDisplay.forEach(prop => {
-				let textContent = user[prop]; if (prop === 'createdAt') { textContent = formatDate(textContent); }
-				if (prop === 'lastUsedAt') { textContent = timeAgo(textContent); }
-				const cell = document.createElement('td'); cell.textContent = textContent; row.appendChild(cell);
-			}); leaderboard.appendChild(row);
-		});</script>
+
+		function timeAgo(dateString) {
+			let timeDifference = + new Date() - new Date(dateString);
+
+			const second = 1000,
+				minute = second * 60,
+				hour = minute * 60,
+				day = hour * 24,
+				week = day * 7;
+
+			if (timeDifference < minute) {
+				return Math.round(timeDifference / second) + " seconds ago";
+			} else if (timeDifference < hour) {
+				return Math.round(timeDifference / minute) + " minutes ago";
+			} else if (timeDifference < day) {
+				return Math.round(timeDifference / hour) + " hours ago";
+			} else if (timeDifference < week) {
+				return Math.round(timeDifference / day) + " days ago";
+			} else {
+				return formatDate(dateString);
+			}
+		}
+
+		const userData = JSON.parse('{user:publicData}');
+		const leaderboard = document.getElementById("usersLeaderboard");
+
+		userData.forEach(user => {
+			const row = document.createElement('tr');
+
+
+			const propertiesToDisplay = ['name', 'prompts', 'lastUsedAt'];
+
+
+			propertiesToDisplay.forEach(prop => {
+				let textContent = user[prop];
+
+
+				if (prop === 'createdAt') {
+					textContent = formatDate(textContent);
+				}
+
+
+				if (prop === 'lastUsedAt') {
+					textContent = timeAgo(textContent);
+				}
+
+				const cell = document.createElement('td');
+				cell.textContent = textContent;
+				row.appendChild(cell);
+			});
+
+			leaderboard.appendChild(row);
+		});
+	</script>
+
 </body>
 </html>
