@@ -5,7 +5,10 @@
 <meta name=viewport content="width=device-width, initial-scale=1.0">
 <link rel=icon href=https://files.catbox.moe/iy7yk9.ico type=image/x-icon>
 <title>Hare-Proxy</title>
-<style>:root{--red:#a82c3a;--orange:#ff5722;--yellow:#ffc300;--green:#b2e835;--blue:#00ced1;--indigo:#4b0082;--violet:#1b1721}.left-image,.left-image-2,.right-image,.right-image-2{position:absolute;width:100%;height:auto}body{font-family:"Lucida Console",Monaco,monospace;font-size:18px;background:black;color:lightslategrey;width:50%;margin:0 auto;padding:100px}._css{font-size:10px}h1,h2{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none}h1{font-size:8vw;color:white;-webkit-text-stroke:.015em black;text-shadow:.05em .05em var(--red),0.1em .1em var(--orange),0.15em .15em var(--yellow),0.2em .2em var(--green),0.25em .25em var(--blue),0.3em .3em var(--indigo),0.35em .35em var(--violet);animation:text-shadow-cascade 1s infinite steps(1)}@keyframes text-shadow-cascade{0%{text-shadow:.05em .05em var(--red),0.1em .1em var(--orange),0.15em .15em var(--yellow),0.2em .2em var(--green),0.25em .25em var(--blue),0.3em .3em var(--indigo),0.35em .35em var(--violet)}14.29%{text-shadow:.05em .05em var(--violet),0.1em .1em var(--red),0.15em .15em var(--orange),0.2em .2em var(--yellow),0.25em .25em var(--green),0.3em .3em var(--blue),0.35em .35em var(--indigo)}28.57%{text-shadow:.05em .05em var(--indigo),0.1em .1em var(--violet),0.15em .15em var(--red),0.2em .2em var(--orange),0.25em .25em var(--yellow),0.3em .3em var(--green),0.35em .35em var(--blue)}42.86%{text-shadow:.05em .05em var(--blue),0.1em .1em var(--indigo),0.15em .15em var(--violet),0.2em .2em var(--red),0.25em .25em var(--orange),0.3em .3em var(--yellow),0.35em .35em var(--green)}57.14%{text-shadow:.05em .05em var(--green),0.1em .1em var(--blue),0.15em .15em var(--indigo),0.2em .2em var(--violet),0.25em .25em var(--red),0.3em .3em var(--orange),0.35em .35em var(--yellow)}71.43%{text-shadow:.05em .05em var(--yellow),0.1em .1em var(--green),0.15em .15em var(--blue),0.2em .2em var(--indigo),0.25em .25em var(--violet),0.3em .3em var(--red),0.35em .35em var(--orange)}85.71%{text-shadow:.05em .05em var(--orange),0.1em .1em var(--yellow),0.15em .15em var(--green),0.2em .2em var(--blue),0.25em .25em var(--indigo),0.3em .3em var(--violet),0.35em .35em var(--red)}100%{text-shadow:.05em .05em var(--red),0.1em .1em var(--orange),0.15em .15em var(--yellow),0.2em .2em var(--green),0.25em .25em var(--blue),0.3em .3em var(--indigo),0.35em .35em var(--violet)}}.black-white-button{background-color:white;color:black;border:2px solid black;padding:10px 20px;font-size:16px;cursor:pointer;transition:background-color .3s ease}.black-white-button:hover{background-color:black;color:white}.bottom-bar{position:fixed;bottom:0;left:0;width:100%;background:#000;color:#8e8e8e;display:flex;align-items:center;padding:8px}.bottom-bar .content{flex:1;margin-left:10px;font-size:12px}.bottom-bar .links a{color:#babab9;margin-left:10px;font-size:12px}.bottom-bar .links a:hover{color:white}.left-image{position:absolute;top:0;left:0;width:100px;height:auto}.left-image-2{position:absolute;top:50px;left:0;width:100px;height:auto}.left-image-3{position:absolute;top:119px;left:0;width:50px;height:auto}.left-image-4{position:absolute;top:190px;left:0;width:50px;height:auto}.right-image{position:absolute;top:0;right:0;width:90px;height:auto}.reveal-wrapper{display:inline-block;color:#272223;padding-left:1.5rem;padding-right:1.5rem}.reveal-content{display:none}.reveal-trigger{cursor:pointer;text-decoration:underline;color:#595959;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none}.reveal-trigger:hover{color:#cc785c}.reveal-content.show{display:block}.reveal-trigger .icon{margin-left:5px}</style>
+<style>:root{--red:#a82c3a;--orange:#ff5722;--yellow:#ffc300;--green:#b2e835;--blue:#00ced1;--indigo:#4b0082;--violet:#1b1721}.left-image,.left-image-2,.right-image,.right-image-2{position:absolute;width:100%;height:auto}body{font-family:"Lucida Console",Monaco,monospace;font-size:18px;background:black;color:lightslategrey;width:50%;margin:0 auto;padding:100px}._css{font-size:10px}h1,h2{-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none}h1{font-size:8vw;color:white;-webkit-text-stroke:.015em black;text-shadow:.05em .05em var(--red),0.1em .1em var(--orange),0.15em .15em var(--yellow),0.2em .2em var(--green),0.25em .25em var(--blue),0.3em .3em var(--indigo),0.35em .35em var(--violet);animation:text-shadow-cascade 1s infinite steps(1)}@keyframes text-shadow-cascade{0%{text-shadow:.05em .05em var(--red),0.1em .1em var(--orange),0.15em .15em var(--yellow),0.2em .2em var(--green),0.25em .25em var(--blue),0.3em .3em var(--indigo),0.35em .35em var(--violet)}14.29%{text-shadow:.05em .05em var(--violet),0.1em .1em var(--red),0.15em .15em var(--orange),0.2em .2em var(--yellow),0.25em .25em var(--green),0.3em .3em var(--blue),0.35em .35em var(--indigo)}28.57%{text-shadow:.05em .05em var(--indigo),0.1em .1em var(--violet),0.15em .15em var(--red),0.2em .2em var(--orange),0.25em .25em var(--yellow),0.3em .3em var(--green),0.35em .35em var(--blue)}42.86%{text-shadow:.05em .05em var(--blue),0.1em .1em var(--indigo),0.15em .15em var(--violet),0.2em .2em var(--red),0.25em .25em var(--orange),0.3em .3em var(--yellow),0.35em .35em var(--green)}57.14%{text-shadow:.05em .05em var(--green),0.1em .1em var(--blue),0.15em .15em var(--indigo),0.2em .2em var(--violet),0.25em .25em var(--red),0.3em .3em var(--orange),0.35em .35em var(--yellow)}71.43%{text-shadow:.05em .05em var(--yellow),0.1em .1em var(--green),0.15em .15em var(--blue),0.2em .2em var(--indigo),0.25em .25em var(--violet),0.3em .3em var(--red),0.35em .35em var(--orange)}85.71%{text-shadow:.05em .05em var(--orange),0.1em .1em var(--yellow),0.15em .15em var(--green),0.2em .2em var(--blue),0.25em .25em var(--indigo),0.3em .3em var(--violet),0.35em .35em var(--red)}100%{text-shadow:.05em .05em var(--red),0.1em .1em var(--orange),0.15em .15em var(--yellow),0.2em .2em var(--green),0.25em .25em var(--blue),0.3em .3em var(--indigo),0.35em .35em var(--violet)}}.black-white-button{background-color:white;color:black;border:2px solid black;padding:10px 20px;font-size:16px;cursor:pointer;transition:background-color .3s ease}.black-white-button:hover{background-color:black;color:white}.bottom-bar{position:fixed;bottom:0;left:0;width:100%;background:#000;color:#8e8e8e;display:flex;align-items:center;padding:8px}.bottom-bar .content{flex:1;margin-left:10px;font-size:12px}.bottom-bar .links a{color:#babab9;margin-left:10px;font-size:12px}.bottom-bar .links a:hover{color:white}.left-image{position:absolute;top:0;left:0;width:100px;height:auto}.left-image-2{position:absolute;top:50px;left:0;width:100px;height:auto}.left-image-3{position:absolute;top:119px;left:0;width:50px;height:auto}.left-image-4{position:absolute;top:190px;left:0;width:50px;height:auto}.right-image{position:absolute;top:0;right:0;width:90px;height:auto}.reveal-wrapper{display:inline-block;color:#272223;padding-left:1.5rem;padding-right:1.5rem}.reveal-content{display:none}.reveal-trigger{cursor:pointer;text-decoration:underline;color:#595959;-moz-user-select:none;-webkit-user-select:none;-ms-user-select:none}.reveal-trigger:hover{color:#cc785c}.reveal-content.show{display:block}.reveal-trigger .icon{margin-left:5px}
+
+
+</style>
 </head>
 <body>
 <img src="https://media.discordapp.net/attachments/935593183126110281/1212822403588034620/GHW1wh0W4AY6zmd.jpg?ex=65f33be2&is=65e0c6e2&hm=a53d0c2c4f4b9d5b1146e70e37b23ca5d02ac761ea8f78f703a4d027a9036f58&=&format=webp&width=1398&height=671" class=left-image alt="Left Image">
@@ -61,10 +64,19 @@ Includes GPT-3.5/4/32k/4-preview/AWS Claude
 <code><a href=https://discord.gg/7TAXPFvUzf>https://discord.gg/7TAXPFvUzf</a></code>
 </div>
 <br><br><br>
+
+<h2>User Data</h2>
+
+<table id="userData" border="1" style="color: lightslategrey;">
+  <tr>
+    <th>Name</th>
+    <th>Prompts</th>
+    <th>Type</th>
+    <th>Status</th>
+  </tr>
+</table>
+
 <div>
-	<span style="color: #555555; font-weight: bold"></span>
-	  <span style="color: #008800; font-weight: bold">{user:publicData}</span><span style="color: #333333">
-	      
 	      
 <div class=bottom-bar>
 <div class=content>
@@ -77,5 +89,32 @@ Includes GPT-3.5/4/32k/4-preview/AWS Claude
 </div>
 <script src=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js></script>
 <script>document.addEventListener("DOMContentLoaded",function(){var a=document.querySelector(".reveal-trigger");var b=document.querySelector(".reveal-content");a.addEventListener("click",function(){b.classList.toggle("show")})});</script>
+
+<script>
+
+var placeholder = '{user:publicData}';
+var jsonData = placeholder.replace('{user:publicData}');
+var userPublicData = JSON.parse(jsonData);
+
+
+var table = document.getElementById("userData");
+
+
+for (var i = 0; i < userPublicData.length; i++) {
+  var row = table.insertRow(-1); // -1 means the row will be added at the end
+
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  var cell3 = row.insertCell(2);
+  var cell4 = row.insertCell(3);
+
+  cell1.innerHTML = userPublicData[i].name;
+  cell2.innerHTML = userPublicData[i].prompts;
+  cell3.innerHTML = userPublicData[i].type;
+  cell4.innerHTML = userPublicData[i].isBanned;
+
+}
+</script>
+
 </body>
 </html>
