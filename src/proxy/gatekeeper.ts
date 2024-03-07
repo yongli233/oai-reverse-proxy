@@ -62,32 +62,20 @@ export const gatekeeper: RequestHandler = (req, res, next) => {
         return next();
       case "limited":
         return res.status(403).json({
-<<<<<<< HEAD
           error: {
             message: `Forbidden: No more IPs can authenticate with this token!`,
           },
-=======
-          error: `Forbidden: no more IPs can authenticate with this token`,
->>>>>>> upstream/main
         });
       case "disabled":
         const bannedUser = getUser(token);
         if (bannedUser?.disabledAt) {
           const reason = bannedUser.disabledReason || "Token disabled";
-<<<<<<< HEAD
           return res
             .status(403)
             .json({ error: { message: `Forbidden: ${reason}` } });
-=======
-          return res.status(403).json({ error: `Forbidden: ${reason}` });
->>>>>>> upstream/main
         }
     }
   }
 
-<<<<<<< HEAD
   res.status(401).json({ error: { message: config.unauthorizedMessage } });
-=======
-  res.status(401).json({ error: "Unauthorized" });
->>>>>>> upstream/main
 };

@@ -22,11 +22,7 @@ export type OpenAIModelFamily =
   | "gpt4-32k"
   | "gpt4-turbo"
   | "dall-e";
-<<<<<<< HEAD
-export type AnthropicModelFamily = "claude";
-=======
 export type AnthropicModelFamily = "claude" | "claude-opus";
->>>>>>> upstream/main
 export type GoogleAIModelFamily = "gemini-pro";
 export type MistralAIModelFamily =
   | "mistral-tiny"
@@ -55,10 +51,7 @@ export const MODEL_FAMILIES = (<A extends readonly ModelFamily[]>(
   "gpt4-turbo",
   "dall-e",
   "claude",
-<<<<<<< HEAD
-=======
   "claude-opus",
->>>>>>> upstream/main
   "gemini-pro",
   "mistral-tiny",
   "mistral-small",
@@ -104,10 +97,7 @@ export const MODEL_FAMILY_SERVICE: {
   "gpt4-32k": "openai",
   "dall-e": "openai",
   claude: "anthropic",
-<<<<<<< HEAD
-=======
   "claude-opus": "anthropic",
->>>>>>> upstream/main
   "aws-claude": "aws",
   "azure-turbo": "azure",
   "azure-gpt4": "azure",
@@ -132,13 +122,8 @@ export function getOpenAIModelFamily(
   return defaultFamily;
 }
 
-<<<<<<< HEAD
-export function getClaudeModelFamily(model: string): ModelFamily {
-  if (model.startsWith("anthropic.")) return getAwsBedrockModelFamily(model);
-=======
 export function getClaudeModelFamily(model: string): AnthropicModelFamily {
   if (model.includes("opus")) return "claude-opus";
->>>>>>> upstream/main
   return "claude";
 }
 
@@ -163,12 +148,8 @@ export function getMistralAIModelFamily(model: string): MistralAIModelFamily {
   }
 }
 
-<<<<<<< HEAD
-export function getAwsBedrockModelFamily(_model: string): ModelFamily {
-=======
 export function getAwsBedrockModelFamily(model: string): ModelFamily {
   if (model.includes("opus")) return "claude-opus";
->>>>>>> upstream/main
   return "aws-claude";
 }
 
@@ -214,12 +195,8 @@ export function getModelFamilyForRequest(req: Request): ModelFamily {
     modelFamily = getAzureOpenAIModelFamily(model);
   } else {
     switch (req.outboundApi) {
-<<<<<<< HEAD
-      case "anthropic":
-=======
       case "anthropic-chat":
       case "anthropic-text":
->>>>>>> upstream/main
         modelFamily = getClaudeModelFamily(model);
         break;
       case "openai":

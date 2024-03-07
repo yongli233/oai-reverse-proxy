@@ -6,10 +6,7 @@ import type { AzureOpenAIModelFamily } from "../../models";
 import { getAzureOpenAIModelFamily } from "../../models";
 import { OpenAIModel } from "../openai/provider";
 import { AzureOpenAIKeyChecker } from "./checker";
-<<<<<<< HEAD
-=======
 import { HttpError } from "../../errors";
->>>>>>> upstream/main
 
 export type AzureOpenAIModel = Exclude<OpenAIModel, "dall-e">;
 
@@ -57,38 +54,11 @@ export class AzureOpenAIKeyProvider implements KeyProvider<AzureOpenAIKey> {
     let bareKeys: string[];
     bareKeys = [...new Set(keyConfig.split(",").map((k) => k.trim()))];
     for (const key of bareKeys) {
-<<<<<<< HEAD
       this.addKey(key, true);
-=======
-      const newKey: AzureOpenAIKey = {
-        key,
-        service: this.service,
-        modelFamilies: ["azure-gpt4"],
-        isDisabled: false,
-        isRevoked: false,
-        promptCount: 0,
-        lastUsed: 0,
-        rateLimitedAt: 0,
-        rateLimitedUntil: 0,
-        contentFiltering: false,
-        hash: `azu-${crypto
-          .createHash("sha256")
-          .update(key)
-          .digest("hex")
-          .slice(0, 8)}`,
-        lastChecked: 0,
-        "azure-turboTokens": 0,
-        "azure-gpt4Tokens": 0,
-        "azure-gpt4-32kTokens": 0,
-        "azure-gpt4-turboTokens": 0,
-      };
-      this.keys.push(newKey);
->>>>>>> upstream/main
     }
     this.log.info({ keyCount: this.keys.length }, "Loaded Azure OpenAI keys.");
   }
 
-<<<<<<< HEAD
   addKey(key: string, init: boolean): boolean {
     const hash = `azu-${crypto
       .createHash("sha256")
@@ -131,8 +101,6 @@ export class AzureOpenAIKeyProvider implements KeyProvider<AzureOpenAIKey> {
     return true;
   }
 
-=======
->>>>>>> upstream/main
   public init() {
     if (config.checkKeys) {
       this.checker = new AzureOpenAIKeyChecker(
@@ -153,14 +121,10 @@ export class AzureOpenAIKeyProvider implements KeyProvider<AzureOpenAIKey> {
       (k) => !k.isDisabled && k.modelFamilies.includes(neededFamily)
     );
     if (availableKeys.length === 0) {
-<<<<<<< HEAD
-      throw new Error(`No keys available for model family '${neededFamily}'.`);
-=======
       throw new HttpError(
         402,
         `No keys available for model family '${neededFamily}'.`
       );
->>>>>>> upstream/main
     }
 
     // (largely copied from the OpenAI provider, without trial key support)

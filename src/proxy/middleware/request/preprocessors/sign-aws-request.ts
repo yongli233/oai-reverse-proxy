@@ -2,14 +2,10 @@ import express from "express";
 import { Sha256 } from "@aws-crypto/sha256-js";
 import { SignatureV4 } from "@smithy/signature-v4";
 import { HttpRequest } from "@smithy/protocol-http";
-<<<<<<< HEAD
-import { AnthropicV1CompleteSchema } from "../../../../shared/api-schemas/anthropic";
-=======
 import {
   AnthropicV1TextSchema,
   AnthropicV1MessagesSchema,
 } from "../../../../shared/api-schemas/anthropic";
->>>>>>> upstream/main
 import { keyPool } from "../../../../shared/key-management";
 import { RequestPreprocessor } from "../index";
 
@@ -19,31 +15,6 @@ const AMZ_HOST =
 /**
  * Signs an outgoing AWS request with the appropriate headers modifies the
  * request object in place to fix the path.
-<<<<<<< HEAD
- */
-export const signAwsRequest: RequestPreprocessor = async (req) => {
-  req.key = keyPool.get("anthropic.claude-v2", "aws");
-
-  const { model, stream } = req.body;
-  req.isStreaming = stream === true || stream === "true";
-
-  let preamble = req.body.prompt.startsWith("\n\nHuman:") ? "" : "\n\nHuman:";
-  req.body.prompt = preamble + req.body.prompt;
-
-  // AWS supports only a subset of Anthropic's parameters and is more strict
-  // about unknown parameters.
-  // TODO: This should happen in transform-outbound-payload.ts
-  const strippedParams = AnthropicV1CompleteSchema.pick({
-    prompt: true,
-    max_tokens_to_sample: true,
-    stop_sequences: true,
-    temperature: true,
-    top_k: true,
-    top_p: true,
-  })
-    .strip()
-    .parse(req.body);
-=======
  * This happens AFTER request transformation.
  */
 export const signAwsRequest: RequestPreprocessor = async (req) => {
@@ -88,7 +59,6 @@ export const signAwsRequest: RequestPreprocessor = async (req) => {
       .strip()
       .parse(req.body);
   }
->>>>>>> upstream/main
 
   const credential = getCredentialParts(req);
   const host = AMZ_HOST.replace("%REGION%", credential.region);

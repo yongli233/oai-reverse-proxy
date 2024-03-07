@@ -1,11 +1,7 @@
 import { RequestHandler } from "express";
 import { config } from "../config";
 import { getTokenCostUsd, prettyTokens } from "./stats";
-<<<<<<< HEAD
 import { redactIp, sortIpUsage } from "./utils";
-=======
-import { redactIp } from "./utils";
->>>>>>> upstream/main
 import * as userStore from "./users/user-store";
 
 export const injectLocals: RequestHandler = (req, res, next) => {
@@ -32,10 +28,7 @@ export const injectLocals: RequestHandler = (req, res, next) => {
   res.locals.prettyTokens = prettyTokens;
   res.locals.tokenCost = getTokenCostUsd;
   res.locals.redactIp = redactIp;
-<<<<<<< HEAD
   res.locals.sortIpUsage = sortIpUsage;
-=======
->>>>>>> upstream/main
 
   next();
 };

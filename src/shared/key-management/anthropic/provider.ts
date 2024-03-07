@@ -2,14 +2,9 @@ import crypto from "crypto";
 import { Key, KeyProvider } from "..";
 import { config } from "../../../config";
 import { logger } from "../../../logger";
-<<<<<<< HEAD
-import type { AnthropicModelFamily } from "../../models";
-import { AnthropicKeyChecker } from "./checker";
-=======
 import { AnthropicModelFamily, getClaudeModelFamily } from "../../models";
 import { AnthropicKeyChecker } from "./checker";
 import { HttpError } from "../../errors";
->>>>>>> upstream/main
 
 // https://docs.anthropic.com/claude/reference/selecting-a-model
 export type AnthropicModel =
@@ -18,13 +13,9 @@ export type AnthropicModel =
   | "claude-v1"
   | "claude-v1-100k"
   | "claude-2"
-<<<<<<< HEAD
-  | "claude-2.1";
-=======
   | "claude-2.1"
   | "claude-3-opus-20240229" // new expensive model
   | "claude-3-sonnet-20240229"; // new cheap claude2 sidegrade
->>>>>>> upstream/main
 
 export type AnthropicKeyUpdate = Omit<
   Partial<AnthropicKey>,
@@ -97,38 +88,11 @@ export class AnthropicKeyProvider implements KeyProvider<AnthropicKey> {
     let bareKeys: string[];
     bareKeys = [...new Set(keyConfig.split(",").map((k) => k.trim()))];
     for (const key of bareKeys) {
-<<<<<<< HEAD
       this.addKey(key, true);
-=======
-      const newKey: AnthropicKey = {
-        key,
-        service: this.service,
-        modelFamilies: ["claude", "claude-opus"],
-        isDisabled: false,
-        isOverQuota: false,
-        isRevoked: false,
-        isPozzed: false,
-        promptCount: 0,
-        lastUsed: 0,
-        rateLimitedAt: 0,
-        rateLimitedUntil: 0,
-        requiresPreamble: false,
-        hash: `ant-${crypto
-          .createHash("sha256")
-          .update(key)
-          .digest("hex")
-          .slice(0, 8)}`,
-        lastChecked: 0,
-        claudeTokens: 0,
-        "claude-opusTokens": 0,
-      };
-      this.keys.push(newKey);
->>>>>>> upstream/main
     }
     this.log.info({ keyCount: this.keys.length }, "Loaded Anthropic keys.");
   }
 
-<<<<<<< HEAD
   addKey(key: string, init: boolean): boolean {
     const hash = `ant-${crypto
       .createHash("sha256")
@@ -144,7 +108,7 @@ export class AnthropicKeyProvider implements KeyProvider<AnthropicKey> {
     const newKey: AnthropicKey = {
       key,
       service: this.service,
-      modelFamilies: ["claude"],
+      modelFamilies: ["claude", "claude-opus"],
       isDisabled: false,
       isOverQuota: false,
       isRevoked: false,
@@ -157,6 +121,7 @@ export class AnthropicKeyProvider implements KeyProvider<AnthropicKey> {
       hash: hash,
       lastChecked: 0,
       claudeTokens: 0,
+      "claude-opusTokens": 0,
     };
     this.keys.push(newKey);
     return true;
@@ -170,8 +135,6 @@ export class AnthropicKeyProvider implements KeyProvider<AnthropicKey> {
     return true;
   }
 
-=======
->>>>>>> upstream/main
   public init() {
     if (config.checkKeys) {
       this.checker = new AnthropicKeyChecker(this.keys, this.update.bind(this));
@@ -188,11 +151,7 @@ export class AnthropicKeyProvider implements KeyProvider<AnthropicKey> {
     // certainly change when they move out of beta later this year.
     const availableKeys = this.keys.filter((k) => !k.isDisabled);
     if (availableKeys.length === 0) {
-<<<<<<< HEAD
-      throw new Error("No Anthropic keys available.");
-=======
       throw new HttpError(402, "No Anthropic keys available.");
->>>>>>> upstream/main
     }
 
     // (largely copied from the OpenAI provider, without trial key support)
@@ -243,19 +202,11 @@ export class AnthropicKeyProvider implements KeyProvider<AnthropicKey> {
     return this.keys.filter((k) => !k.isDisabled).length;
   }
 
-<<<<<<< HEAD
-  public incrementUsage(hash: string, _model: string, tokens: number) {
-    const key = this.keys.find((k) => k.hash === hash);
-    if (!key) return;
-    key.promptCount++;
-    key.claudeTokens += tokens;
-=======
   public incrementUsage(hash: string, model: string, tokens: number) {
     const key = this.keys.find((k) => k.hash === hash);
     if (!key) return;
     key.promptCount++;
     key[`${getClaudeModelFamily(model)}Tokens`] += tokens;
->>>>>>> upstream/main
   }
 
   public getLockoutPeriod() {

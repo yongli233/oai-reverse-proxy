@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-import { StreamingCompletionTransformer } from "../index";
-=======
 import {
   AnthropicV2StreamEvent,
   StreamingCompletionTransformer,
 } from "../index";
->>>>>>> upstream/main
 import { parseEvent, ServerSentEvent } from "../parse-sse";
 import { logger } from "../../../../../logger";
 
@@ -14,16 +10,6 @@ const log = logger.child({
   transformer: "anthropic-v2-to-openai",
 });
 
-<<<<<<< HEAD
-type AnthropicV2StreamEvent = {
-  log_id?: string;
-  model?: string;
-  completion: string;
-  stop_reason: string;
-};
-
-=======
->>>>>>> upstream/main
 /**
  * Transforms an incoming Anthropic SSE (2023-06-01 API) to an equivalent
  * OpenAI chat.completion.chunk SSE.

@@ -4,10 +4,7 @@ import { config } from "../../../config";
 import { logger } from "../../../logger";
 import type { AwsBedrockModelFamily } from "../../models";
 import { AwsKeyChecker } from "./checker";
-<<<<<<< HEAD
-=======
 import { HttpError } from "../../errors";
->>>>>>> upstream/main
 
 // https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids-arns.html
 export type AwsBedrockModel =
@@ -33,10 +30,7 @@ export interface AwsBedrockKey extends Key, AwsBedrockKeyUsage {
    * set.
    */
   awsLoggingStatus: "unknown" | "disabled" | "enabled";
-<<<<<<< HEAD
-=======
   sonnetEnabled: boolean;
->>>>>>> upstream/main
 }
 
 /**
@@ -69,36 +63,11 @@ export class AwsBedrockKeyProvider implements KeyProvider<AwsBedrockKey> {
     let bareKeys: string[];
     bareKeys = [...new Set(keyConfig.split(",").map((k) => k.trim()))];
     for (const key of bareKeys) {
-<<<<<<< HEAD
       this.addKey(key, true);
-=======
-      const newKey: AwsBedrockKey = {
-        key,
-        service: this.service,
-        modelFamilies: ["aws-claude"],
-        isDisabled: false,
-        isRevoked: false,
-        promptCount: 0,
-        lastUsed: 0,
-        rateLimitedAt: 0,
-        rateLimitedUntil: 0,
-        awsLoggingStatus: "unknown",
-        hash: `aws-${crypto
-          .createHash("sha256")
-          .update(key)
-          .digest("hex")
-          .slice(0, 8)}`,
-        lastChecked: 0,
-        sonnetEnabled: true,
-        ["aws-claudeTokens"]: 0,
-      };
-      this.keys.push(newKey);
->>>>>>> upstream/main
     }
     this.log.info({ keyCount: this.keys.length }, "Loaded AWS Bedrock keys.");
   }
 
-<<<<<<< HEAD
   addKey(key: string, init: boolean): boolean {
     const hash = `aws-${crypto
       .createHash("sha256")
@@ -124,6 +93,7 @@ export class AwsBedrockKeyProvider implements KeyProvider<AwsBedrockKey> {
       awsLoggingStatus: "unknown",
       hash: hash,
       lastChecked: 0,
+      sonnetEnabled: true,
       ["aws-claudeTokens"]: 0,
     };
     this.keys.push(newKey);
@@ -138,8 +108,6 @@ export class AwsBedrockKeyProvider implements KeyProvider<AwsBedrockKey> {
     return true;
   }
 
-=======
->>>>>>> upstream/main
   public init() {
     if (config.checkKeys) {
       this.checker = new AwsKeyChecker(this.keys, this.update.bind(this));
@@ -151,15 +119,6 @@ export class AwsBedrockKeyProvider implements KeyProvider<AwsBedrockKey> {
     return this.keys.map((k) => Object.freeze({ ...k, key: undefined }));
   }
 
-<<<<<<< HEAD
-  public get(_model: AwsBedrockModel) {
-    const availableKeys = this.keys.filter((k) => {
-      const isNotLogged = k.awsLoggingStatus === "disabled";
-      return !k.isDisabled && (isNotLogged || config.allowAwsLogging);
-    });
-    if (availableKeys.length === 0) {
-      throw new Error("No AWS Bedrock keys available");
-=======
   public get(model: AwsBedrockModel) {
     const availableKeys = this.keys.filter((k) => {
       const isNotLogged = k.awsLoggingStatus === "disabled";
@@ -175,7 +134,6 @@ export class AwsBedrockKeyProvider implements KeyProvider<AwsBedrockKey> {
         402,
         "No keys available for this model. This proxy might not have Claude 3 Sonnet keys available."
       );
->>>>>>> upstream/main
     }
 
     // (largely copied from the OpenAI provider, without trial key support)

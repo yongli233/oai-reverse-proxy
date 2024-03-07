@@ -29,12 +29,9 @@ export function getTokenCostUsd(model: ModelFamily, tokens: number) {
     case "claude":
       cost = 0.000008;
       break;
-<<<<<<< HEAD
-=======
     case "claude-opus":
       cost = 0.000015;
       break;
->>>>>>> upstream/main
     case "mistral-tiny":
       cost = 0.00000031;
       break;

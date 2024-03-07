@@ -12,23 +12,16 @@ import { setupAssetsDir } from "./shared/file-storage/setup-assets-dir";
 import { keyPool } from "./shared/key-management";
 import { adminRouter } from "./admin/routes";
 import { proxyRouter } from "./proxy/routes";
-<<<<<<< HEAD
 import { getBaseUrl, infoPageRouter } from "./info-page";
-=======
-import { infoPageRouter } from "./info-page";
->>>>>>> upstream/main
 import { userRouter } from "./user/routes";
 import { logQueue } from "./shared/prompt-logging";
 import { start as startRequestQueue } from "./proxy/queue";
 import { init as initUserStore } from "./shared/users/user-store";
 import { init as initTokenizers } from "./shared/tokenization";
 import { checkOrigin } from "./proxy/check-origin";
-<<<<<<< HEAD
+import { sendErrorToClient } from "./proxy/middleware/response/error-generator";
 import { getRecentImages, getUsersData } from "./custom-info";
 import { buildInfo } from "./service-info";
-=======
-import { sendErrorToClient } from "./proxy/middleware/response/error-generator";
->>>>>>> upstream/main
 
 const PORT = config.port;
 const BIND_ADDRESS = config.bindAddress;
@@ -78,10 +71,7 @@ app.use(checkOrigin);
 app.use("/admin", adminRouter);
 app.use(config.proxyEndpointRoute, proxyRouter);
 app.use("/user", userRouter);
-<<<<<<< HEAD
 
-=======
->>>>>>> upstream/main
 if (config.staticServiceInfo) {
   app.get("/", (_req, res) => res.sendStatus(200));
 } else {
@@ -89,7 +79,6 @@ if (config.staticServiceInfo) {
 }
 
 app.use(
-<<<<<<< HEAD
   "/_static",
   express.static("public", {
     maxAge: 1000 * 60 * 60 * 24 * 365,
@@ -103,8 +92,6 @@ app.use(
 );
 
 app.use("/page", express.static("pages", { extensions: ["html"] }));
-
-logger.info("Public json info...");
 app.get("/public", (req, res) => {
   if (!config.publicJsonInfo)
     return res.status(404).json({ error: { message: "Not Found" } });
@@ -118,25 +105,7 @@ app.get("/public", (req, res) => {
 });
 
 // 500 and 404
-app.use((err: any, _req: unknown, res: express.Response, _next: unknown) => {
-  if (err.status) {
-    res.status(err.status).json({ error: err.message });
-  } else {
-    logger.error(err);
-    res.status(500).json({
-      error: {
-        type: "proxy_error",
-        message: err.message,
-        stack: err.stack,
-        proxy_note: `Reverse proxy encountered an internal server error.`,
-      },
-    });
-  }
-});
-
-app.use((_req: unknown, res: express.Response) => {
-  res.status(404).json({ error: { message: "Not found" } });
-=======
+app.use(
   (err: any, req: express.Request, res: express.Response, _next: unknown) => {
     if (!err.status) {
       logger.error(err, "Unhandled error in request");
@@ -157,9 +126,9 @@ app.use((_req: unknown, res: express.Response) => {
     });
   }
 );
+
 app.use((_req: unknown, res: express.Response) => {
-  res.status(404).json({ error: "Not found" });
->>>>>>> upstream/main
+  res.status(404).json({ error: { message: "Not found" } });
 });
 
 async function start() {

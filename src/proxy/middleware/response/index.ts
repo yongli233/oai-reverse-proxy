@@ -18,11 +18,7 @@ import {
   getCompletionFromBody,
   isImageGenerationRequest,
   isTextGenerationRequest,
-<<<<<<< HEAD
-  writeErrorResponse,
-=======
   sendProxyError,
->>>>>>> upstream/main
 } from "../common";
 import { handleStreamedResponse } from "./handle-streamed-response";
 import { logPrompt } from "./log-prompt";
@@ -196,15 +192,6 @@ export const decodeResponseBody: RawResponseBodyHandler = async (
           // as it was never a problem.
           body = await decoder(body);
         } else {
-<<<<<<< HEAD
-          const errorMessage = `Proxy received response with unsupported content-encoding: ${contentEncoding}`;
-          req.log.warn({ contentEncoding, key: req.key?.hash }, errorMessage);
-          writeErrorResponse(req, res, 500, "Internal Server Error", {
-            error: errorMessage,
-            contentEncoding,
-          });
-          return reject(errorMessage);
-=======
           const error = `Proxy received response with unsupported content-encoding: ${contentEncoding}`;
           req.log.warn({ contentEncoding, key: req.key?.hash }, error);
           sendProxyError(req, res, 500, "Internal Server Error", {
@@ -212,7 +199,6 @@ export const decodeResponseBody: RawResponseBodyHandler = async (
             contentEncoding,
           });
           return reject(error);
->>>>>>> upstream/main
         }
       }
 
@@ -222,21 +208,11 @@ export const decodeResponseBody: RawResponseBodyHandler = async (
           return resolve(json);
         }
         return resolve(body.toString());
-<<<<<<< HEAD
-      } catch (error: any) {
-        const errorMessage = `Proxy received response with invalid JSON: ${error.message}`;
-        req.log.warn({ error: error.stack, key: req.key?.hash }, errorMessage);
-        writeErrorResponse(req, res, 500, "Internal Server Error", {
-          error: errorMessage,
-        });
-        return reject(errorMessage);
-=======
       } catch (e) {
         const msg = `Proxy received response with invalid JSON: ${e.message}`;
         req.log.warn({ error: e.stack, key: req.key?.hash }, msg);
         sendProxyError(req, res, 500, "Internal Server Error", { error: msg });
         return reject(msg);
->>>>>>> upstream/main
       }
     });
   });
@@ -289,11 +265,7 @@ const handleUpstreamErrors: ProxyResHandlerWithBody = async (
       proxy_note: `Proxy got back an error, but it was not in JSON format. This is likely a temporary problem with the upstream service.`,
     };
 
-<<<<<<< HEAD
-    writeErrorResponse(req, res, statusCode, statusMessage, errorObject);
-=======
     sendProxyError(req, res, statusCode, statusMessage, errorObject);
->>>>>>> upstream/main
     throw new HttpError(statusCode, parseError.message);
   }
 
@@ -358,14 +330,6 @@ const handleUpstreamErrors: ProxyResHandlerWithBody = async (
         errorPayload.proxy_note = `API key is invalid or revoked. ${tryAgainMessage}`;
         break;
       case "AccessDeniedException":
-<<<<<<< HEAD
-        req.log.error(
-          { key: req.key?.hash, model: req.body?.model },
-          "Disabling key due to AccessDeniedException when invoking model. If credentials are valid, check IAM permissions."
-        );
-        keyPool.disable(req.key!, "revoked");
-        errorPayload.proxy_note = `API key doesn't have access to the requested resource.`;
-=======
         const isModelAccessError =
           errorPayload.error?.message?.includes(`specified model ID`);
         if (!isModelAccessError) {
@@ -376,7 +340,6 @@ const handleUpstreamErrors: ProxyResHandlerWithBody = async (
           keyPool.disable(req.key!, "revoked");
         }
         errorPayload.proxy_note = `API key doesn't have access to the requested resource. Model ID: ${req.body?.model}`;
->>>>>>> upstream/main
         break;
       default:
         errorPayload.proxy_note = `Received 403 error. Key may be invalid.`;
@@ -446,13 +409,9 @@ const handleUpstreamErrors: ProxyResHandlerWithBody = async (
     );
   }
 
-<<<<<<< HEAD
-  writeErrorResponse(req, res, statusCode, statusMessage, errorPayload);
-=======
   sendProxyError(req, res, statusCode, statusMessage, errorPayload);
   // This is bubbled up to onProxyRes's handler for logging but will not trigger
   // a write to the response as `sendProxyError` has just done that.
->>>>>>> upstream/main
   throw new HttpError(statusCode, errorPayload.error?.message);
 };
 
@@ -476,17 +435,11 @@ async function handleAnthropicBadRequestError(
     throw new RetryableError("Claude request re-enqueued to add preamble.");
   }
 
-<<<<<<< HEAD
-  // Only affects Anthropic keys
-  // {"type":"error","error":{"type":"invalid_request_error","message":"Usage blocked until 2024-03-01T00:00:00+00:00 due to user specified spend limits."}}
-  const isOverQuota = error?.message?.match(/usage blocked until/i);
-=======
   // {"type":"error","error":{"type":"invalid_request_error","message":"Usage blocked until 2024-03-01T00:00:00+00:00 due to user specified spend limits."}}
   // {"type":"error","error":{"type":"invalid_request_error","message":"Your credit balance is too low to access the Claude API. Please go to Plans & Billing to upgrade or purchase credits."}}
   const isOverQuota =
     error?.message?.match(/usage blocked until/i) ||
     error?.message?.match(/credit balance is too low/i);
->>>>>>> upstream/main
   if (isOverQuota) {
     req.log.warn(
       { key: req.key?.hash, message: error?.message },
@@ -497,9 +450,6 @@ async function handleAnthropicBadRequestError(
     return;
   }
 
-<<<<<<< HEAD
-  errorPayload.proxy_note = `Unrecognized 400 Bad Request error from the API.`;
-=======
   const isDisabled = error?.message?.match(/organization has been disabled/i);
   if (isDisabled) {
     req.log.warn(
@@ -512,7 +462,6 @@ async function handleAnthropicBadRequestError(
   }
 
   errorPayload.proxy_note = `Unrecognized error from the API. (${error?.message})`;
->>>>>>> upstream/main
 }
 
 async function handleAnthropicRateLimitError(
@@ -686,11 +635,7 @@ const incrementUsage: ProxyResHandlerWithBody = async (_proxyRes, req) => {
     );
     keyPool.incrementUsage(req.key!, model, tokensUsed);
     if (req.user) {
-<<<<<<< HEAD
       incrementPromptCount(req.user.token, req.ip);
-=======
-      incrementPromptCount(req.user.token);
->>>>>>> upstream/main
       incrementTokenCount(req.user.token, model, req.outboundApi, tokensUsed);
     }
   }

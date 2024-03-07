@@ -1,9 +1,5 @@
 <%- include("partials/shared_header", { title: "View User - OAI Reverse Proxy Admin" }) %>
 <h1>View User</h1>
-<<<<<<< HEAD
-=======
-
->>>>>>> upstream/main
 <table class="striped">
   <thead>
     <tr>
@@ -14,14 +10,10 @@
   <tbody>
     <tr>
       <th scope="row">Token</th>
-<<<<<<< HEAD
       <td><%- user.token %></td>
       <td class="actions">
         <a title="Rotate" id="rotate-token" href="#" data-token="<%= user.token %>">🔄️</a>
       </td>
-=======
-      <td colspan="2"><%- user.token %></td>
->>>>>>> upstream/main
     </tr>
     <tr>
       <th scope="row">Nickname</th>
@@ -65,12 +57,7 @@
       <td><%- user.disabledReason %></td>
       <% if (user.disabledAt) { %>
       <td class="actions">
-<<<<<<< HEAD
         <a title="Edit" id="edit-disabledReason" href="#" data-field="disabledReason" data-token="<%= user.token %>">✏️</a>
-=======
-        <a title="Edit" id="edit-disabledReason" href="#" data-field="disabledReason"
-          data-token="<%= user.token %>">✏️</a>
->>>>>>> upstream/main
       </td>
       <% } %>
     </tr>
@@ -86,12 +73,7 @@
       <td colspan="2"><%- include("partials/shared_user_ip_list", { user, shouldRedact: false }) %></td>
     </tr>
     <tr>
-<<<<<<< HEAD
       <th scope="row">Admin Note <span title="Unlike nickname, this is not visible to or editable by the user">🔒</span></th>
-=======
-      <th scope="row">Admin Note <span title="Unlike nickname, this is not visible to or editable by the user">🔒</span>
-      </th>
->>>>>>> upstream/main
       <td><%- user.adminNote ?? "none" %></td>
       <td class="actions">
         <a title="Edit" id="edit-adminNote" href="#" data-field="adminNote" data-token="<%= user.token %>">✏️</a>
@@ -106,11 +88,7 @@
   </tbody>
 </table>
 
-<<<<<<< HEAD
 <form style="display: none" id="current-values">
-=======
-<form style="display:none" id="current-values">
->>>>>>> upstream/main
   <input type="hidden" name="token" value="<%- user.token %>" />
   <% ["nickname", "type", "disabledAt", "disabledReason", "maxIps", "adminNote"].forEach(function (key) { %>
   <input type="hidden" name="<%- key %>" value="<%- user[key] %>" />
@@ -124,17 +102,12 @@
   <input type="hidden" name="_csrf" value="<%- csrfToken %>" />
   <button type="submit" class="btn btn-primary">Refresh Quotas for User</button>
 </form>
-<<<<<<< HEAD
 <% } %>
 <%- include("partials/shared_quota-info", { quota, user }) %>
-=======
-<% } %> <%- include("partials/shared_quota-info", { quota, user }) %>
->>>>>>> upstream/main
 
 <p><a href="/admin/manage/list-users">Back to User List</a></p>
 
 <script>
-<<<<<<< HEAD
   document.querySelector("td.actions a#rotate-token").addEventListener("click", function (e) {
     e.preventDefault();
     const token = e.target.dataset.token;
@@ -164,8 +137,6 @@
     }
   });
 
-=======
->>>>>>> upstream/main
   document.querySelectorAll("td.actions a[data-field]").forEach(function (a) {
     a.addEventListener("click", function (e) {
       e.preventDefault();
@@ -203,9 +174,5 @@
   });
 </script>
 
-<<<<<<< HEAD
 <%- include("partials/admin-ban-xhr-script") %>
 <%- include("partials/admin-footer") %>
-=======
-<%- include("partials/admin-ban-xhr-script") %> <%- include("partials/admin-footer") %>
->>>>>>> upstream/main

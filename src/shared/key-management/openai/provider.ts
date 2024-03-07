@@ -8,10 +8,7 @@ import { config } from "../../../config";
 import { logger } from "../../../logger";
 import { OpenAIKeyChecker } from "./checker";
 import { getOpenAIModelFamily, OpenAIModelFamily } from "../../models";
-<<<<<<< HEAD
-=======
 import { HttpError } from "../../errors";
->>>>>>> upstream/main
 
 export type OpenAIModel =
   | "gpt-3.5-turbo"
@@ -100,48 +97,12 @@ export class OpenAIKeyProvider implements KeyProvider<OpenAIKey> {
     let bareKeys: string[];
     bareKeys = keyString.split(",").map((k) => k.trim());
     bareKeys = [...new Set(bareKeys)];
-<<<<<<< HEAD
     for (const key of bareKeys) {
       this.addKey(key, true);
-=======
-    for (const k of bareKeys) {
-      const newKey: OpenAIKey = {
-        key: k,
-        service: "openai" as const,
-        modelFamilies: [
-          "turbo" as const,
-          "gpt4" as const,
-          "gpt4-turbo" as const,
-        ],
-        isTrial: false,
-        isDisabled: false,
-        isRevoked: false,
-        isOverQuota: false,
-        lastUsed: 0,
-        lastChecked: 0,
-        promptCount: 0,
-        hash: `oai-${crypto
-          .createHash("sha256")
-          .update(k)
-          .digest("hex")
-          .slice(0, 8)}`,
-        rateLimitedAt: 0,
-        rateLimitRequestsReset: 0,
-        rateLimitTokensReset: 0,
-        turboTokens: 0,
-        gpt4Tokens: 0,
-        "gpt4-32kTokens": 0,
-        "gpt4-turboTokens": 0,
-        "dall-eTokens": 0,
-        gpt4Rpm: 0,
-      };
-      this.keys.push(newKey);
->>>>>>> upstream/main
     }
     this.log.info({ keyCount: this.keys.length }, "Loaded OpenAI keys.");
   }
 
-<<<<<<< HEAD
   addKey(key: string, init: boolean) {
     const hash = `oai-${crypto
       .createHash("sha256")
@@ -189,8 +150,6 @@ export class OpenAIKeyProvider implements KeyProvider<OpenAIKey> {
     return true;
   }
 
-=======
->>>>>>> upstream/main
   public init() {
     if (config.checkKeys) {
       const cloneFn = this.clone.bind(this);
@@ -226,14 +185,10 @@ export class OpenAIKeyProvider implements KeyProvider<OpenAIKey> {
     );
 
     if (availableKeys.length === 0) {
-<<<<<<< HEAD
-      throw new Error(`No keys available for model family '${neededFamily}'.`);
-=======
       throw new HttpError(
         402,
         `No keys available for model family '${neededFamily}'.`
       );
->>>>>>> upstream/main
     }
 
     // Select a key, from highest priority to lowest priority:

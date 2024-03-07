@@ -16,10 +16,7 @@ import {
 } from "./mistral";
 import { APIFormat } from "../key-management";
 import {
-<<<<<<< HEAD
-=======
   AnthropicChatMessage,
->>>>>>> upstream/main
   GoogleAIChatMessage,
   MistralAIChatMessage,
   OpenAIChatMessage,
@@ -31,25 +28,6 @@ export async function init() {
   initMistralAI();
 }
 
-<<<<<<< HEAD
-/** Tagged union via `service` field of the different types of requests that can
- * be made to the tokenization service, for both prompts and completions */
-type TokenCountRequest = { req: Request } & (
-  | { prompt: OpenAIChatMessage[]; completion?: never; service: "openai" }
-  | {
-      prompt: string;
-      completion?: never;
-      service: "openai-text" | "anthropic" | "google-ai";
-    }
-  | { prompt?: GoogleAIChatMessage[]; completion?: never; service: "google-ai" }
-  | {
-      prompt: MistralAIChatMessage[];
-      completion?: never;
-      service: "mistral-ai";
-    }
-  | { prompt?: never; completion: string; service: APIFormat }
-  | { prompt?: never; completion?: never; service: "openai-image" }
-=======
 type OpenAIChatTokenCountRequest = {
   prompt: OpenAIChatMessage[];
   completion?: never;
@@ -104,7 +82,6 @@ type TokenCountRequest = { req: Request } & (
   | FlatPromptTokenCountRequest
   | StringCompletionTokenCountRequest
   | OpenAIImageCompletionTokenCountRequest
->>>>>>> upstream/main
 );
 
 type TokenCountResult = {
@@ -121,16 +98,10 @@ export async function countTokens({
 }: TokenCountRequest): Promise<TokenCountResult> {
   const time = process.hrtime();
   switch (service) {
-<<<<<<< HEAD
-    case "anthropic":
-      return {
-        ...getClaudeTokenCount(prompt ?? completion, req.body.model),
-=======
     case "anthropic-chat":
     case "anthropic-text":
       return {
         ...(await getClaudeTokenCount(prompt ?? completion)),
->>>>>>> upstream/main
         tokenization_duration_ms: getElapsedMs(time),
       };
     case "openai":

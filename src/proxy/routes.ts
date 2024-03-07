@@ -8,10 +8,7 @@ import { googleAI } from "./google-ai";
 import { mistralAI } from "./mistral-ai";
 import { aws } from "./aws";
 import { azure } from "./azure";
-<<<<<<< HEAD
-=======
 import { sendErrorToClient } from "./middleware/response/error-generator";
->>>>>>> upstream/main
 
 const proxyRouter = express.Router();
 proxyRouter.use((req, _res, next) => {
@@ -50,10 +47,6 @@ proxyRouter.get("*", (req, res, next) => {
   }
 });
 // Handle 404s.
-<<<<<<< HEAD
-proxyRouter.use((_req, res) => {
-  res.status(404).json({ error: "Not found" });
-=======
 proxyRouter.use((req, res) => {
   sendErrorToClient({
     req,
@@ -71,7 +64,6 @@ proxyRouter.use((req, res) => {
       },
     },
   });
->>>>>>> upstream/main
 });
 
 export { proxyRouter as proxyRouter };

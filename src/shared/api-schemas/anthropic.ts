@@ -9,35 +9,14 @@ import {
 
 const CLAUDE_OUTPUT_MAX = config.maxOutputTokensAnthropic;
 
-<<<<<<< HEAD
-// https://console.anthropic.com/docs/api/reference#-v1-complete
-export const AnthropicV1CompleteSchema = z
-  .object({
-    model: z.string().max(100),
-    prompt: z.string({
-      required_error:
-        "No prompt found. Are you sending an OpenAI-formatted request to the Claude endpoint?",
-    }),
-    max_tokens_to_sample: z.coerce
-      .number()
-      .int()
-      .transform((v) => Math.min(v, CLAUDE_OUTPUT_MAX)),
-=======
 const AnthropicV1BaseSchema = z
   .object({
     model: z.string().max(100),
->>>>>>> upstream/main
     stop_sequences: z.array(z.string().max(500)).optional(),
     stream: z.boolean().optional().default(false),
     temperature: z.coerce.number().optional().default(1),
     top_k: z.coerce.number().optional(),
     top_p: z.coerce.number().optional(),
-<<<<<<< HEAD
-  })
-  .strip();
-
-export function openAIMessagesToClaudePrompt(messages: OpenAIChatMessage[]) {
-=======
     metadata: z.object({ user_id: z.string().optional() }).optional(),
   })
   .strip();
@@ -93,7 +72,6 @@ export type AnthropicChatMessage = z.infer<
 export function openAIMessagesToClaudeTextPrompt(
   messages: OpenAIChatMessage[]
 ) {
->>>>>>> upstream/main
   return (
     messages
       .map((m) => {
@@ -115,21 +93,13 @@ export function openAIMessagesToClaudeTextPrompt(
   );
 }
 
-<<<<<<< HEAD
-export function openAIToAnthropic(req: Request) {
-=======
 export function openAIToAnthropicText(req: Request) {
->>>>>>> upstream/main
   const { body } = req;
   const result = OpenAIV1ChatCompletionSchema.safeParse(body);
   if (!result.success) {
     req.log.warn(
       { issues: result.error.issues, body },
-<<<<<<< HEAD
-      "Invalid OpenAI-to-Anthropic request"
-=======
       "Invalid OpenAI-to-Anthropic Text request"
->>>>>>> upstream/main
     );
     throw result.error;
   }
@@ -137,11 +107,7 @@ export function openAIToAnthropicText(req: Request) {
   req.headers["anthropic-version"] = "2023-06-01";
 
   const { messages, ...rest } = result.data;
-<<<<<<< HEAD
-  const prompt = openAIMessagesToClaudePrompt(messages);
-=======
   const prompt = openAIMessagesToClaudeTextPrompt(messages);
->>>>>>> upstream/main
 
   let stops = rest.stop
     ? Array.isArray(rest.stop)
@@ -166,8 +132,6 @@ export function openAIToAnthropicText(req: Request) {
     top_p: rest.top_p,
   };
 }
-<<<<<<< HEAD
-=======
 
 /**
  * Converts an older Anthropic Text Completion prompt to the newer Messages API
@@ -272,4 +236,3 @@ export function flattenAnthropicMessages(
     })
     .join("\n\n");
 }
->>>>>>> upstream/main

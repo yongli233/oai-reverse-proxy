@@ -1,9 +1,5 @@
 import { getTokenizer } from "@anthropic-ai/tokenizer";
 import { Tiktoken } from "tiktoken/lite";
-<<<<<<< HEAD
-
-let encoder: Tiktoken;
-=======
 import { AnthropicChatMessage } from "../api-schemas";
 import { libSharp } from "../file-storage";
 import { logger } from "../../logger";
@@ -13,25 +9,11 @@ const log = logger.child({ module: "tokenizer", service: "anthropic" });
 let encoder: Tiktoken;
 let userRoleCount = 0;
 let assistantRoleCount = 0;
->>>>>>> upstream/main
 
 export function init() {
   // they export a `countTokens` function too but it instantiates a new
   // tokenizer every single time and it is not fast...
   encoder = getTokenizer();
-<<<<<<< HEAD
-  return true;
-}
-
-export function getTokenCount(prompt: string, _model: string) {
-  // Don't try tokenizing if the prompt is massive to prevent DoS.
-  // 500k characters should be sufficient for all supported models.
-  if (prompt.length > 500000) {
-    return {
-      tokenizer: "length fallback",
-      token_count: 100000,
-    };
-=======
   userRoleCount = encoder.encode("\n\nHuman: ", "all").length;
   assistantRoleCount = encoder.encode("\n\nAssistant: ", "all").length;
   return true;
@@ -44,7 +26,6 @@ export async function getTokenCount(prompt: string | AnthropicChatMessage[]) {
 
   if (prompt.length > 800000) {
     throw new Error("Content is too large to tokenize.");
->>>>>>> upstream/main
   }
 
   return {
@@ -52,8 +33,6 @@ export async function getTokenCount(prompt: string | AnthropicChatMessage[]) {
     token_count: encoder.encode(prompt.normalize("NFKC"), "all").length,
   };
 }
-<<<<<<< HEAD
-=======
 
 async function getTokenCountForMessages(messages: AnthropicChatMessage[]) {
   let numTokens = 0;
@@ -135,4 +114,3 @@ async function getImageTokenCount(b64: string) {
   log.debug({ width, height, tokens }, "Calculated Claude Vision token cost");
   return Math.ceil(tokens);
 }
->>>>>>> upstream/main

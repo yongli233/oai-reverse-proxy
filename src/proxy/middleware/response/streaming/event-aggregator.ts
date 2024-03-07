@@ -1,18 +1,12 @@
 import { APIFormat } from "../../../../shared/key-management";
 import { assertNever } from "../../../../shared/utils";
 import {
-<<<<<<< HEAD
-  mergeEventsForAnthropic,
-  mergeEventsForOpenAIChat,
-  mergeEventsForOpenAIText,
-=======
   anthropicV2ToOpenAI,
   mergeEventsForAnthropicChat,
   mergeEventsForAnthropicText,
   mergeEventsForOpenAIChat,
   mergeEventsForOpenAIText,
   AnthropicV2StreamEvent,
->>>>>>> upstream/main
   OpenAIChatCompletionStreamEvent,
 } from "./index";
 
@@ -29,10 +23,6 @@ export class EventAggregator {
     this.format = format;
   }
 
-<<<<<<< HEAD
-  addEvent(event: OpenAIChatCompletionStreamEvent) {
-    this.events.push(event);
-=======
   addEvent(event: OpenAIChatCompletionStreamEvent | AnthropicV2StreamEvent) {
     if (eventIsOpenAIEvent(event)) {
       this.events.push(event);
@@ -57,7 +47,6 @@ export class EventAggregator {
         this.events.push(openAIEvent.event);
       }
     }
->>>>>>> upstream/main
   }
 
   getFinalResponse() {
@@ -68,15 +57,10 @@ export class EventAggregator {
         return mergeEventsForOpenAIChat(this.events);
       case "openai-text":
         return mergeEventsForOpenAIText(this.events);
-<<<<<<< HEAD
-      case "anthropic":
-        return mergeEventsForAnthropic(this.events);
-=======
       case "anthropic-text":
         return mergeEventsForAnthropicText(this.events);
       case "anthropic-chat":
         return mergeEventsForAnthropicChat(this.events);
->>>>>>> upstream/main
       case "openai-image":
         throw new Error(`SSE aggregation not supported for ${this.format}`);
       default:
@@ -84,12 +68,9 @@ export class EventAggregator {
     }
   }
 }
-<<<<<<< HEAD
-=======
 
 function eventIsOpenAIEvent(
   event: any
 ): event is OpenAIChatCompletionStreamEvent {
   return event?.object === "chat.completion.chunk";
 }
->>>>>>> upstream/main

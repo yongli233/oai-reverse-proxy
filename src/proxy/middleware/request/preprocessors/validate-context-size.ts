@@ -29,12 +29,8 @@ export const validateContextSize: RequestPreprocessor = async (req) => {
     case "openai-text":
       proxyMax = OPENAI_MAX_CONTEXT;
       break;
-<<<<<<< HEAD
-    case "anthropic":
-=======
     case "anthropic-chat":
     case "anthropic-text":
->>>>>>> upstream/main
       proxyMax = CLAUDE_MAX_CONTEXT;
       break;
     case "google-ai":
@@ -73,20 +69,14 @@ export const validateContextSize: RequestPreprocessor = async (req) => {
     modelMax = 100000;
   } else if (model.match(/^claude-2/)) {
     modelMax = 200000;
-<<<<<<< HEAD
-=======
   } else if (model.match(/^claude-3/)) {
     modelMax = 200000;
->>>>>>> upstream/main
   } else if (model.match(/^gemini-\d{3}$/)) {
     modelMax = GOOGLE_AI_MAX_CONTEXT;
   } else if (model.match(/^mistral-(tiny|small|medium)$/)) {
     modelMax = MISTRAL_AI_MAX_CONTENT;
-<<<<<<< HEAD
-=======
   } else if (model.match(/^anthropic\.claude-3-sonnet/)) {
     modelMax = 200000;
->>>>>>> upstream/main
   } else if (model.match(/^anthropic\.claude-v2:\d/)) {
     modelMax = 200000;
   } else if (model.match(/^anthropic\.claude/)) {

@@ -133,11 +133,8 @@ type Config = {
   rejectPhrases: string[];
   /** Message to return when rejecting requests. */
   rejectMessage: string;
-<<<<<<< HEAD
   /** Message to return when user is unauthorized */
   unauthorizedMessage: string;
-=======
->>>>>>> upstream/main
   /** Verbosity level of diagnostic logging. */
   logLevel: "trace" | "debug" | "info" | "warn" | "error";
   /**
@@ -211,7 +208,6 @@ type Config = {
    **/
   staticServiceInfo?: boolean;
   /**
-<<<<<<< HEAD
    * Whether to show JSON info on the public endpoint.
    * By default, it is set to false, which means the JSON info will not be shown.
    */
@@ -223,8 +219,6 @@ type Config = {
    */
   numberOfImages: number;
   /**
-=======
->>>>>>> upstream/main
    * Trusted proxy hops. If you are deploying the server behind a reverse proxy
    * (Nginx, Cloudflare Tunnel, AWS WAF, etc.) the IP address of incoming
    * requests will be the IP address of the proxy, not the actual user.
@@ -316,10 +310,7 @@ export const config: Config = {
     "gpt4-32k",
     "gpt4-turbo",
     "claude",
-<<<<<<< HEAD
-=======
     "claude-opus",
->>>>>>> upstream/main
     "gemini-pro",
     "mistral-tiny",
     "mistral-small",
@@ -336,13 +327,10 @@ export const config: Config = {
     "REJECT_MESSAGE",
     "This content violates /aicg/'s acceptable use policy."
   ),
-<<<<<<< HEAD
   unauthorizedMessage: getEnvWithDefault(
     "UNAUTHORIZED_MESSAGE",
     "Unauthorized"
   ),
-=======
->>>>>>> upstream/main
   logLevel: getEnvWithDefault("LOG_LEVEL", "info"),
   checkKeys: getEnvWithDefault("CHECK_KEYS", !isDev),
   showTokenCosts: getEnvWithDefault("SHOW_TOKEN_COSTS", false),
@@ -375,11 +363,8 @@ export const config: Config = {
   showRecentImages: getEnvWithDefault("SHOW_RECENT_IMAGES", true),
   useInsecureCookies: getEnvWithDefault("USE_INSECURE_COOKIES", isDev),
   staticServiceInfo: getEnvWithDefault("STATIC_SERVICE_INFO", false),
-<<<<<<< HEAD
   publicJsonInfo: getEnvWithDefault("PUBLIC_JSON_INFO", false),
   numberOfImages: getEnvWithDefault("NUMBER_OF_IMAGES", 12),
-=======
->>>>>>> upstream/main
   trustedProxies: getEnvWithDefault("TRUSTED_PROXIES", 1),
   allowOpenAIToolUsage: getEnvWithDefault("ALLOW_OPENAI_TOOL_USAGE", false),
   proxyEndpointRoute: getEnvWithDefault("PROXY_ENDPOINT_ROUTE", "/proxy"),
@@ -444,13 +429,10 @@ export async function assertConfigIsValid() {
     );
   }
 
-<<<<<<< HEAD
   if (config.numberOfImages <= 0) {
     throw new Error("Number of images must be positive number");
   }
 
-=======
->>>>>>> upstream/main
   // Ensure forks which add new secret-like config keys don't unwittingly expose
   // them to users.
   for (const key of getKeys(config)) {
@@ -480,10 +462,6 @@ export const SENSITIVE_KEYS: (keyof Config)[] = ["googleSheetsSpreadsheetId"];
  */
 export const OMITTED_KEYS = [
   "port",
-<<<<<<< HEAD
-=======
-  "bindAddress",
->>>>>>> upstream/main
   "logLevel",
   "openaiKey",
   "anthropicKey",
@@ -495,10 +473,6 @@ export const OMITTED_KEYS = [
   "adminKey",
   "serviceInfoPassword",
   "rejectPhrases",
-<<<<<<< HEAD
-=======
-  "rejectMessage",
->>>>>>> upstream/main
   "showTokenCosts",
   "googleSheetsKey",
   "firebaseKey",
@@ -513,7 +487,6 @@ export const OMITTED_KEYS = [
   "useInsecureCookies",
   "staticServiceInfo",
   "checkKeys",
-<<<<<<< HEAD
   "publicJsonInfo",
   "numberOfImages",
   "allowedModelFamilies",
@@ -521,10 +494,6 @@ export const OMITTED_KEYS = [
   "maxIpsAutoBan",
   "trustedProxies",
   "bindAddress",
-=======
-  "allowedModelFamilies",
-  "trustedProxies",
->>>>>>> upstream/main
   "proxyEndpointRoute",
 ] satisfies (keyof Config)[];
 type OmitKeys = (typeof OMITTED_KEYS)[number];

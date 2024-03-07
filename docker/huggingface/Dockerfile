@@ -1,20 +1,13 @@
 FROM node:18-bullseye-slim
 RUN apt-get update && \
     apt-get install -y git
-<<<<<<< HEAD
 RUN git clone https://gitgud.io/yae-miko/oai-reverse-proxy.git /app
-=======
-RUN git clone https://gitgud.io/khanon/oai-reverse-proxy.git /app
->>>>>>> upstream/main
 WORKDIR /app
 RUN chown -R 1000:1000 /app
 USER 1000
 RUN npm install
 COPY Dockerfile greeting.md* .env* ./
-<<<<<<< HEAD
 COPY public/ ./public
-=======
->>>>>>> upstream/main
 RUN npm run build
 EXPOSE 7860
 ENV NODE_ENV=production

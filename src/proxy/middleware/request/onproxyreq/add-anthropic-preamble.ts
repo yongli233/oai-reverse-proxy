@@ -7,31 +7,19 @@ import { HPMRequestCallback } from "../index";
  * know this without trying to send the request and seeing if it fails. If a
  * key is marked as requiring a preamble, it will be added here.
  */
-<<<<<<< HEAD
-export const addAnthropicPreamble: HPMRequestCallback = (
-  _proxyReq,
-  req
-) => {
-  if (!isTextGenerationRequest(req) || req.key?.service !== "anthropic") {
-=======
 export const addAnthropicPreamble: HPMRequestCallback = (_proxyReq, req) => {
   if (
     !isTextGenerationRequest(req) ||
     req.key?.service !== "anthropic" ||
     req.outboundApi !== "anthropic-text"
   ) {
->>>>>>> upstream/main
     return;
   }
 
   let preamble = "";
   let prompt = req.body.prompt;
   assertAnthropicKey(req.key);
-<<<<<<< HEAD
-  if (req.key.requiresPreamble) {
-=======
   if (req.key.requiresPreamble && prompt) {
->>>>>>> upstream/main
     preamble = prompt.startsWith("\n\nHuman:") ? "" : "\n\nHuman:";
     req.log.debug({ key: req.key.hash, preamble }, "Adding preamble to prompt");
   }

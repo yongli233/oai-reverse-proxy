@@ -3,10 +3,7 @@ import { Key, KeyProvider } from "..";
 import { config } from "../../../config";
 import { logger } from "../../../logger";
 import type { GoogleAIModelFamily } from "../../models";
-<<<<<<< HEAD
-=======
 import { HttpError } from "../../errors";
->>>>>>> upstream/main
 
 // Note that Google AI is not the same as Vertex AI, both are provided by Google
 // but Vertex is the GCP product for enterprise. while Google AI is the
@@ -67,34 +64,11 @@ export class GoogleAIKeyProvider implements KeyProvider<GoogleAIKey> {
     let bareKeys: string[];
     bareKeys = [...new Set(keyConfig.split(",").map((k) => k.trim()))];
     for (const key of bareKeys) {
-<<<<<<< HEAD
       this.addKey(key, true);
-=======
-      const newKey: GoogleAIKey = {
-        key,
-        service: this.service,
-        modelFamilies: ["gemini-pro"],
-        isDisabled: false,
-        isRevoked: false,
-        promptCount: 0,
-        lastUsed: 0,
-        rateLimitedAt: 0,
-        rateLimitedUntil: 0,
-        hash: `plm-${crypto
-          .createHash("sha256")
-          .update(key)
-          .digest("hex")
-          .slice(0, 8)}`,
-        lastChecked: 0,
-        "gemini-proTokens": 0,
-      };
-      this.keys.push(newKey);
->>>>>>> upstream/main
     }
     this.log.info({ keyCount: this.keys.length }, "Loaded Google AI keys.");
   }
 
-<<<<<<< HEAD
   addKey(key: string, init: boolean): boolean {
     const hash = `plm-${crypto
       .createHash("sha256")
@@ -133,8 +107,6 @@ export class GoogleAIKeyProvider implements KeyProvider<GoogleAIKey> {
     return true;
   }
 
-=======
->>>>>>> upstream/main
   public init() {}
 
   public list() {
@@ -144,11 +116,7 @@ export class GoogleAIKeyProvider implements KeyProvider<GoogleAIKey> {
   public get(_model: GoogleAIModel) {
     const availableKeys = this.keys.filter((k) => !k.isDisabled);
     if (availableKeys.length === 0) {
-<<<<<<< HEAD
-      throw new Error("No Google AI keys available");
-=======
       throw new HttpError(402, "No Google AI keys available");
->>>>>>> upstream/main
     }
 
     // (largely copied from the OpenAI provider, without trial key support)
