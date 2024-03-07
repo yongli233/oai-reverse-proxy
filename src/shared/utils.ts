@@ -1,7 +1,10 @@
 import { Query } from "express-serve-static-core";
 import sanitize from "sanitize-html";
 import { z } from "zod";
+<<<<<<< HEAD
 import { User } from "./users/schema";
+=======
+>>>>>>> upstream/main
 
 export function parseSort(sort: Query["sort"]) {
   if (!sort) return null;
@@ -58,7 +61,11 @@ export function makeOptionalPropsNullable<Schema extends z.AnyZodObject>(
 ) {
   const entries = Object.entries(schema.shape) as [
     keyof Schema["shape"],
+<<<<<<< HEAD
     z.ZodTypeAny,
+=======
+    z.ZodTypeAny
+>>>>>>> upstream/main
   ][];
   const newProps = entries.reduce(
     (acc, [key, value]) => {
@@ -82,6 +89,7 @@ export function redactIp(ip: string) {
   return ipv6 ? "redacted:ipv6" : ip.replace(/\.\d+\.\d+$/, ".xxx.xxx");
 }
 
+<<<<<<< HEAD
 export function sortIpUsage(ipUsage: User["ipUsage"]) {
   if (!ipUsage) return [];
 
@@ -96,6 +104,8 @@ export function sortIpUsage(ipUsage: User["ipUsage"]) {
   }));
 }
 
+=======
+>>>>>>> upstream/main
 export function assertNever(x: never): never {
   throw new Error(`Called assertNever with argument ${x}.`);
 }

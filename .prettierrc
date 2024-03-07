@@ -1,6 +1,7 @@
 {
   "overrides": [
     {
+<<<<<<< HEAD
       "files": ["*.ejs"],
       "options": {
         "printWidth": 160,
@@ -12,6 +13,14 @@
       "files": ["./src/custom-info.ts"],
       "options": {
         "printWidth": 160
+=======
+      "files": [
+        "*.ejs"
+      ],
+      "options": {
+        "printWidth": 160,
+        "bracketSameLine": true
+>>>>>>> upstream/main
       }
     }
   ],

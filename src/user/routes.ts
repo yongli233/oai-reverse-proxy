@@ -1,7 +1,10 @@
 import express, { Router } from "express";
 import { injectCsrfToken, checkCsrfToken } from "../shared/inject-csrf";
 import { selfServiceRouter } from "./web/self-service";
+<<<<<<< HEAD
 import { selfServiceAPIRouter } from "./api/self-services-api";
+=======
+>>>>>>> upstream/main
 import { injectLocals } from "../shared/inject-locals";
 import { withSession } from "../shared/with-session";
 
@@ -12,11 +15,15 @@ userRouter.use(
   express.urlencoded({ extended: true, limit: "1mb" })
 );
 userRouter.use(withSession);
+<<<<<<< HEAD
 userRouter.use(injectCsrfToken);
 
 userRouter.use("/api", selfServiceAPIRouter);
 
 userRouter.use(checkCsrfToken);
+=======
+userRouter.use(injectCsrfToken, checkCsrfToken);
+>>>>>>> upstream/main
 userRouter.use(injectLocals);
 
 userRouter.use(selfServiceRouter);

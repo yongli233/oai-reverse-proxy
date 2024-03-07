@@ -2,8 +2,13 @@ import pino from "pino";
 import { Transform, TransformOptions } from "stream";
 import { Message } from "@smithy/eventstream-codec";
 import { APIFormat } from "../../../../shared/key-management";
+<<<<<<< HEAD
 import { makeCompletionSSE } from "../../../../shared/streaming";
 import { RetryableError } from "../index";
+=======
+import { RetryableError } from "../index";
+import { buildSpoofedSSE } from "../error-generator";
+>>>>>>> upstream/main
 
 type SSEStreamAdapterOptions = TransformOptions & {
   contentType?: string;
@@ -21,6 +26,10 @@ type SSEStreamAdapterOptions = TransformOptions & {
 export class SSEStreamAdapter extends Transform {
   private readonly isAwsStream;
   private readonly isGoogleStream;
+<<<<<<< HEAD
+=======
+  private api: APIFormat;
+>>>>>>> upstream/main
   private partialMessage = "";
   private textDecoder = new TextDecoder("utf8");
   private log: pino.Logger;
@@ -30,6 +39,10 @@ export class SSEStreamAdapter extends Transform {
     this.isAwsStream =
       options?.contentType === "application/vnd.amazon.eventstream";
     this.isGoogleStream = options?.api === "google-ai";
+<<<<<<< HEAD
+=======
+    this.api = options.api;
+>>>>>>> upstream/main
     this.log = options.logger.child({ module: "sse-stream-adapter" });
   }
 
@@ -49,7 +62,17 @@ export class SSEStreamAdapter extends Transform {
         if (contentType === "application/json" && eventType === "chunk") {
           const { bytes } = JSON.parse(bodyStr);
           const event = Buffer.from(bytes, "base64").toString("utf8");
+<<<<<<< HEAD
           return ["event: completion", `data: ${event}`].join(`\n`);
+=======
+          const eventObj = JSON.parse(event);
+
+          if ("completion" in eventObj) {
+            return ["event: completion", `data: ${event}`].join(`\n`);
+          } else {
+            return [`event: ${eventObj.type}`, `data: ${event}`].join(`\n`);
+          }
+>>>>>>> upstream/main
         }
       // Intentional fallthrough, as non-JSON events may as well be errors
       // noinspection FallThroughInSwitchStatementJS
@@ -66,6 +89,7 @@ export class SSEStreamAdapter extends Transform {
             throw new RetryableError("AWS request throttled mid-stream");
           default:
             this.log.error({ message, type }, "Received bad AWS stream event");
+<<<<<<< HEAD
             return makeCompletionSSE({
               format: "anthropic",
               title: "Proxy stream error",
@@ -75,6 +99,19 @@ export class SSEStreamAdapter extends Transform {
               reqId: "proxy-sse-adapter-message",
               model: "",
             });
+=======
+            let text;
+            try {
+              const { bytes } = JSON.parse(bodyStr);
+              text = Buffer.from(bytes, "base64").toString("utf8");
+            } catch (error) {
+              text = bodyStr;
+            }
+            const error: any = new Error(`Got mysterious error chunk: ${type}`);
+            error.lastEvent = text;
+            this.emit("error", error);
+            return null;
+>>>>>>> upstream/main
         }
       default:
         // Amazon says this can't ever happen...
@@ -94,7 +131,11 @@ export class SSEStreamAdapter extends Transform {
         return `data: ${JSON.stringify(data)}`;
       } else {
         this.log.error({ event: data }, "Received bad Google AI event");
+<<<<<<< HEAD
         return `data: ${makeCompletionSSE({
+=======
+        return `data: ${buildSpoofedSSE({
+>>>>>>> upstream/main
           format: "google-ai",
           title: "Proxy stream error",
           message:
@@ -137,8 +178,12 @@ export class SSEStreamAdapter extends Transform {
       }
       callback();
     } catch (error) {
+<<<<<<< HEAD
       error.lastEvent = data?.toString();
       this.emit("error", error);
+=======
+      error.lastEvent = data?.toString() ?? "[SSEStreamAdapter] no data";
+>>>>>>> upstream/main
       callback(error);
     }
   }

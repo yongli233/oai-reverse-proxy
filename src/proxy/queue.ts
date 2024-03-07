@@ -13,17 +13,29 @@
 
 import crypto from "crypto";
 import type { Handler, Request } from "express";
+<<<<<<< HEAD
+=======
+import { BadRequestError, TooManyRequestsError } from "../shared/errors";
+>>>>>>> upstream/main
 import { keyPool } from "../shared/key-management";
 import {
   getModelFamilyForRequest,
   MODEL_FAMILIES,
   ModelFamily,
 } from "../shared/models";
+<<<<<<< HEAD
 import { makeCompletionSSE, initializeSseStream } from "../shared/streaming";
+=======
+import { initializeSseStream } from "../shared/streaming";
+>>>>>>> upstream/main
 import { logger } from "../logger";
 import { getUniqueIps, SHARED_IP_ADDRESSES } from "./rate-limit";
 import { RequestPreprocessor } from "./middleware/request";
 import { handleProxyError } from "./middleware/common";
+<<<<<<< HEAD
+=======
+import { sendErrorToClient } from "./middleware/response/error-generator";
+>>>>>>> upstream/main
 
 const queue: Request[] = [];
 const log = logger.child({ module: "request-queue" });
@@ -80,10 +92,21 @@ export async function enqueue(req: Request) {
       // Re-enqueued requests are not counted towards the limit since they
       // already made it through the queue once.
       if (req.retryCount === 0) {
+<<<<<<< HEAD
         throw new Error("Too many agnai.chat requests are already queued");
       }
     } else {
       throw new Error("Your IP or token already has a request in the queue");
+=======
+        throw new TooManyRequestsError(
+          "Too many agnai.chat requests are already queued"
+        );
+      }
+    } else {
+      throw new TooManyRequestsError(
+        "Your IP or user token already has another request in the queue."
+      );
+>>>>>>> upstream/main
     }
   }
 
@@ -101,8 +124,13 @@ export async function enqueue(req: Request) {
     }
     registerHeartbeat(req);
   } else if (getProxyLoad() > LOAD_THRESHOLD) {
+<<<<<<< HEAD
     throw new Error(
       "Due to heavy traffic on this proxy, you must enable streaming for your request."
+=======
+    throw new BadRequestError(
+      "Due to heavy traffic on this proxy, you must enable streaming in your chat client to use this endpoint."
+>>>>>>> upstream/main
     );
   }
 
@@ -354,11 +382,28 @@ export function createQueueMiddleware({
     try {
       await enqueue(req);
     } catch (err: any) {
+<<<<<<< HEAD
       req.res!.status(429).json({
         type: "proxy_error",
         message: err.message,
         stack: err.stack,
         proxy_note: `Only one request can be queued at a time. If you don't have another request queued, your IP or user token might be in use by another request.`,
+=======
+      const title =
+        err.status === 429
+          ? "Proxy queue error (too many concurrent requests)"
+          : "Proxy queue error (streaming required)";
+      sendErrorToClient({
+        options: {
+          title,
+          message: err.message,
+          format: req.inboundApi,
+          reqId: req.id,
+          model: req.body?.model,
+        },
+        req,
+        res,
+>>>>>>> upstream/main
       });
     }
   };
@@ -373,6 +418,7 @@ function killQueuedRequest(req: Request) {
   const res = req.res;
   try {
     const message = `Your request has been terminated by the proxy because it has been in the queue for more than 5 minutes.`;
+<<<<<<< HEAD
     if (res.headersSent) {
       const event = makeCompletionSSE({
         format: req.inboundApi,
@@ -387,6 +433,19 @@ function killQueuedRequest(req: Request) {
     } else {
       res.status(500).json({ error: message });
     }
+=======
+    sendErrorToClient({
+      options: {
+        title: "Proxy queue error (request killed)",
+        message,
+        format: req.inboundApi,
+        reqId: req.id,
+        model: req.body?.model,
+      },
+      req,
+      res,
+    });
+>>>>>>> upstream/main
   } catch (e) {
     req.log.error(e, `Error killing stalled request.`);
   }

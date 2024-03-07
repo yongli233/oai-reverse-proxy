@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { Request, RequestHandler, Router } from "express";
+=======
+import { Request, RequestHandler, Response, Router } from "express";
+>>>>>>> upstream/main
 import { createProxyMiddleware } from "http-proxy-middleware";
 import { v4 } from "uuid";
 import { config } from "../config";
@@ -16,6 +20,11 @@ import {
   ProxyResHandlerWithBody,
   createOnProxyResHandler,
 } from "./middleware/response";
+<<<<<<< HEAD
+=======
+import { transformAnthropicChatResponseToAnthropicText } from "./anthropic";
+import { sendErrorToClient } from "./middleware/response/error-generator";
+>>>>>>> upstream/main
 
 const LATEST_AWS_V2_MINOR_VERSION = "1";
 
@@ -29,9 +38,17 @@ const getModelsResponse = () => {
 
   if (!config.awsCredentials) return { object: "list", data: [] };
 
+<<<<<<< HEAD
   const variants = [
     "anthropic.claude-v2",
     "anthropic.claude-v2:1",
+=======
+  // https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html
+  const variants = [
+    "anthropic.claude-v2",
+    "anthropic.claude-v2:1",
+    "anthropic.claude-3-sonnet-20240229-v1:0",
+>>>>>>> upstream/main
   ];
 
   const models = variants.map((id) => ({
@@ -72,7 +89,19 @@ const awsResponseHandler: ProxyResHandlerWithBody = async (
 
   if (req.inboundApi === "openai") {
     req.log.info("Transforming AWS Claude response to OpenAI format");
+<<<<<<< HEAD
     body = transformAwsResponse(body, req);
+=======
+    body = transformAwsTextResponseToOpenAI(body, req);
+  }
+
+  if (
+    req.inboundApi === "anthropic-text" &&
+    req.outboundApi === "anthropic-chat"
+  ) {
+    req.log.info("Transforming AWS Claude chat response to Text format");
+    body = transformAnthropicChatResponseToAnthropicText(body);
+>>>>>>> upstream/main
   }
 
   if (req.tokenizerInfo) {
@@ -91,7 +120,11 @@ const awsResponseHandler: ProxyResHandlerWithBody = async (
  * is only used for non-streaming requests as streaming requests are handled
  * on-the-fly.
  */
+<<<<<<< HEAD
 function transformAwsResponse(
+=======
+function transformAwsTextResponseToOpenAI(
+>>>>>>> upstream/main
   awsBody: Record<string, any>,
   req: Request
 ): Record<string, any> {
@@ -138,6 +171,7 @@ const awsProxy = createQueueMiddleware({
   }),
 });
 
+<<<<<<< HEAD
 const awsRouter = Router();
 awsRouter.get("/v1/models", handleModelRequest);
 // Native(ish) Anthropic chat completion endpoint.
@@ -146,16 +180,70 @@ awsRouter.post(
   ipLimiter,
   createPreprocessorMiddleware(
     { inApi: "anthropic", outApi: "anthropic", service: "aws" },
+=======
+const nativeTextPreprocessor = createPreprocessorMiddleware(
+  { inApi: "anthropic-text", outApi: "anthropic-text", service: "aws" },
+  { afterTransform: [maybeReassignModel] }
+);
+
+const textToChatPreprocessor = createPreprocessorMiddleware(
+  { inApi: "anthropic-text", outApi: "anthropic-chat", service: "aws" },
+  { afterTransform: [maybeReassignModel] }
+);
+
+/**
+ * Routes text completion prompts to aws anthropic-chat if they need translation
+ * (claude-3 based models do not support the old text completion endpoint).
+ */
+const awsTextCompletionRouter: RequestHandler = (req, res, next) => {
+  if (req.body.model?.includes("claude-3")) {
+    textToChatPreprocessor(req, res, next);
+  } else {
+    nativeTextPreprocessor(req, res, next);
+  }
+};
+
+const awsRouter = Router();
+awsRouter.get("/v1/models", handleModelRequest);
+// Native(ish) Anthropic text completion endpoint.
+awsRouter.post("/v1/complete", ipLimiter, awsTextCompletionRouter, awsProxy);
+// Native Anthropic chat completion endpoint.
+awsRouter.post(
+  "/v1/messages",
+  ipLimiter,
+  createPreprocessorMiddleware(
+    { inApi: "anthropic-chat", outApi: "anthropic-chat", service: "aws" },
+>>>>>>> upstream/main
     { afterTransform: [maybeReassignModel] }
   ),
   awsProxy
 );
+<<<<<<< HEAD
+=======
+// Temporary force-Claude3 endpoint
+awsRouter.post(
+  "/v1/sonnet/:action(complete|messages)",
+  ipLimiter,
+  handleCompatibilityRequest,
+  createPreprocessorMiddleware({
+    inApi: "anthropic-text",
+    outApi: "anthropic-chat",
+    service: "aws",
+  }),
+  awsProxy
+);
+
+>>>>>>> upstream/main
 // OpenAI-to-AWS Anthropic compatibility endpoint.
 awsRouter.post(
   "/v1/chat/completions",
   ipLimiter,
   createPreprocessorMiddleware(
+<<<<<<< HEAD
     { inApi: "openai", outApi: "anthropic", service: "aws" },
+=======
+    { inApi: "openai", outApi: "anthropic-text", service: "aws" },
+>>>>>>> upstream/main
     { afterTransform: [maybeReassignModel] }
   ),
   awsProxy
@@ -177,7 +265,12 @@ function maybeReassignModel(req: Request) {
     return;
   }
 
+<<<<<<< HEAD
   const pattern = /^(claude-)?(instant-)?(v)?(\d+)(\.(\d+))?(-\d+k)?$/i;
+=======
+  const pattern =
+    /^(claude-)?(instant-)?(v)?(\d+)(\.(\d+))?(-\d+k)?(-sonnet-?|-opus-?)(\d*)/i;
+>>>>>>> upstream/main
   const match = model.match(pattern);
 
   // If there's no match, return the latest v2 model
@@ -186,7 +279,13 @@ function maybeReassignModel(req: Request) {
     return;
   }
 
+<<<<<<< HEAD
   const [, , instant, , major, , minor] = match;
+=======
+  const instant = match[2];
+  const major = match[4];
+  const minor = match[6];
+>>>>>>> upstream/main
 
   if (instant) {
     req.body.model = "anthropic.claude-instant-v1";
@@ -209,9 +308,58 @@ function maybeReassignModel(req: Request) {
     return;
   }
 
+<<<<<<< HEAD
+=======
+  // AWS currently only supports one v3 model.
+  const variant = match[8]; // sonnet or opus
+  const variantVersion = match[9];
+  if (major === "3") {
+    req.body.model = "anthropic.claude-3-sonnet-20240229-v1:0";
+    return;
+  }
+
+>>>>>>> upstream/main
   // Fallback to latest v2 model
   req.body.model = `anthropic.claude-v2:${LATEST_AWS_V2_MINOR_VERSION}`;
   return;
 }
 
+<<<<<<< HEAD
+=======
+export function handleCompatibilityRequest(
+  req: Request,
+  res: Response,
+  next: any
+) {
+  const action = req.params.action;
+  const alreadyInChatFormat = Boolean(req.body.messages);
+  const compatModel = "anthropic.claude-3-sonnet-20240229-v1:0";
+  req.log.info(
+    { inputModel: req.body.model, compatModel, alreadyInChatFormat },
+    "Handling AWS compatibility request"
+  );
+
+  if (action === "messages" || alreadyInChatFormat) {
+    return sendErrorToClient({
+      req,
+      res,
+      options: {
+        title: "Unnecessary usage of compatibility endpoint",
+        message: `Your client seems to already support the new Claude API format. This endpoint is intended for clients that do not yet support the new format.\nUse the normal \`/aws/claude\` proxy endpoint instead.`,
+        format: "unknown",
+        statusCode: 400,
+        reqId: req.id,
+        obj: {
+          requested_endpoint: "/aws/claude/sonnet",
+          correct_endpoint: "/aws/claude",
+        },
+      },
+    });
+  }
+
+  req.body.model = compatModel;
+  next();
+}
+
+>>>>>>> upstream/main
 export const aws = awsRouter;

@@ -1,7 +1,11 @@
 import { Router } from "express";
 import { UserPartialSchema } from "../../shared/users/schema";
 import * as userStore from "../../shared/users/user-store";
+<<<<<<< HEAD
 import { ForbiddenError, UserInputError } from "../../shared/errors";
+=======
+import { ForbiddenError, BadRequestError } from "../../shared/errors";
+>>>>>>> upstream/main
 import { sanitizeAndTrim } from "../../shared/utils";
 import { config } from "../../config";
 
@@ -62,7 +66,11 @@ router.post("/edit-nickname", (req, res) => {
 
   const result = schema.safeParse(req.body);
   if (!result.success) {
+<<<<<<< HEAD
     throw new UserInputError(result.error.message);
+=======
+    throw new BadRequestError(result.error.message);
+>>>>>>> upstream/main
   }
 
   const newNickname = result.data.nickname || null;
@@ -71,7 +79,11 @@ router.post("/edit-nickname", (req, res) => {
   return res.redirect("/user/lookup");
 });
 
+<<<<<<< HEAD
 export function truncateToken(token: string) {
+=======
+function truncateToken(token: string) {
+>>>>>>> upstream/main
   const sliceLength = Math.max(Math.floor(token.length / 8), 1);
   return `${token.slice(0, sliceLength)}...${token.slice(-sliceLength)}`;
 }

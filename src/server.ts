@@ -12,15 +12,23 @@ import { setupAssetsDir } from "./shared/file-storage/setup-assets-dir";
 import { keyPool } from "./shared/key-management";
 import { adminRouter } from "./admin/routes";
 import { proxyRouter } from "./proxy/routes";
+<<<<<<< HEAD
 import { getBaseUrl, infoPageRouter } from "./info-page";
+=======
+import { infoPageRouter } from "./info-page";
+>>>>>>> upstream/main
 import { userRouter } from "./user/routes";
 import { logQueue } from "./shared/prompt-logging";
 import { start as startRequestQueue } from "./proxy/queue";
 import { init as initUserStore } from "./shared/users/user-store";
 import { init as initTokenizers } from "./shared/tokenization";
 import { checkOrigin } from "./proxy/check-origin";
+<<<<<<< HEAD
 import { getRecentImages, getUsersData } from "./custom-info";
 import { buildInfo } from "./service-info";
+=======
+import { sendErrorToClient } from "./proxy/middleware/response/error-generator";
+>>>>>>> upstream/main
 
 const PORT = config.port;
 const BIND_ADDRESS = config.bindAddress;
@@ -70,7 +78,10 @@ app.use(checkOrigin);
 app.use("/admin", adminRouter);
 app.use(config.proxyEndpointRoute, proxyRouter);
 app.use("/user", userRouter);
+<<<<<<< HEAD
 
+=======
+>>>>>>> upstream/main
 if (config.staticServiceInfo) {
   app.get("/", (_req, res) => res.sendStatus(200));
 } else {
@@ -78,6 +89,7 @@ if (config.staticServiceInfo) {
 }
 
 app.use(
+<<<<<<< HEAD
   "/_static",
   express.static("public", {
     maxAge: 1000 * 60 * 60 * 24 * 365,
@@ -124,6 +136,30 @@ app.use((err: any, _req: unknown, res: express.Response, _next: unknown) => {
 
 app.use((_req: unknown, res: express.Response) => {
   res.status(404).json({ error: { message: "Not found" } });
+=======
+  (err: any, req: express.Request, res: express.Response, _next: unknown) => {
+    if (!err.status) {
+      logger.error(err, "Unhandled error in request");
+    }
+
+    sendErrorToClient({
+      req,
+      res,
+      options: {
+        title: `Proxy error (HTTP ${err.status})`,
+        message:
+          "Reverse proxy encountered an unexpected error while processing your request.",
+        reqId: req.id,
+        statusCode: err.status,
+        obj: { error: err.message, stack: err.stack },
+        format: "unknown",
+      },
+    });
+  }
+);
+app.use((_req: unknown, res: express.Response) => {
+  res.status(404).json({ error: "Not found" });
+>>>>>>> upstream/main
 });
 
 async function start() {

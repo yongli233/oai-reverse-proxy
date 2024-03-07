@@ -90,7 +90,10 @@ router.get("/list-users", (req, res) => {
   const sort = parseSort(req.query.sort) || ["sumTokens", "createdAt"];
   const requestedPageSize =
     Number(req.query.perPage) || Number(req.cookies.perPage) || 20;
+<<<<<<< HEAD
 
+=======
+>>>>>>> upstream/main
   const perPage = Math.max(1, Math.min(1000, requestedPageSize));
   const users = userStore
     .getUsers()
@@ -172,6 +175,7 @@ router.post("/reactivate-user/:token", (req, res) => {
   return res.sendStatus(204);
 });
 
+<<<<<<< HEAD
 router.post("/rotate-token/:token", (req, res) => {
   const user = userStore.getUser(req.params.token);
   if (!user) throw new HttpError(404, "User not found");
@@ -185,6 +189,8 @@ router.post("/rotate-token/:token", (req, res) => {
   return res.status(200).json({ newToken });
 });
 
+=======
+>>>>>>> upstream/main
 router.post("/disable-user/:token", (req, res) => {
   const user = userStore.getUser(req.params.token);
   if (!user) throw new HttpError(404, "User not found");
@@ -210,12 +216,16 @@ router.post("/maintenance", (req, res) => {
   let flash = { type: "", message: "" };
   switch (action) {
     case "recheck": {
+<<<<<<< HEAD
       const service = req.body.service as LLMService | undefined;
 
       const checkable: LLMService[] = service
         ? [service]
         : ["openai", "anthropic", "aws", "azure"];
 
+=======
+      const checkable: LLMService[] = ["openai", "anthropic", "aws", "azure"];
+>>>>>>> upstream/main
       checkable.forEach((s) => keyPool.recheck(s));
       const keyCount = keyPool
         .list()
@@ -250,6 +260,7 @@ router.post("/maintenance", (req, res) => {
   return res.redirect(`/admin/manage`);
 });
 
+<<<<<<< HEAD
 router.get("/key-manager", (req, res) => {
   const sort = parseSort(req.query.sort) || [
     "isWorking",
@@ -334,6 +345,8 @@ router.post("/key-manager/delete-keys", (req, res) => {
   return res.redirect(`/admin/manage/key-manager?${urlSearch}`);
 });
 
+=======
+>>>>>>> upstream/main
 router.get("/download-stats", (_req, res) => {
   return res.render("admin_download-stats");
 });

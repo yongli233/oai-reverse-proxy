@@ -9,11 +9,20 @@ import { KeyPool } from "./key-pool";
 /** The request and response format used by a model's API. */
 export type APIFormat =
   | "openai"
+<<<<<<< HEAD
   | "anthropic"
   | "google-ai"
   | "mistral-ai"
   | "openai-text"
   | "openai-image";
+=======
+  | "openai-text"
+  | "openai-image"
+  | "anthropic-chat" // Anthropic's newer messages array format
+  | "anthropic-text" // Legacy flat string prompt format
+  | "google-ai"
+  | "mistral-ai";
+>>>>>>> upstream/main
 export type Model =
   | OpenAIModel
   | AnthropicModel
@@ -57,8 +66,11 @@ for service-agnostic functionality.
 export interface KeyProvider<T extends Key = Key> {
   readonly service: LLMService;
   init(): void;
+<<<<<<< HEAD
   addKey(key: string, init: boolean): boolean;
   removeKey(hash: string): boolean;
+=======
+>>>>>>> upstream/main
   get(model: Model): T;
   list(): Omit<T, "key">[];
   disable(key: T): void;

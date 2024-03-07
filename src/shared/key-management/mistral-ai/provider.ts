@@ -4,6 +4,10 @@ import { config } from "../../../config";
 import { logger } from "../../../logger";
 import { MistralAIModelFamily, getMistralAIModelFamily } from "../../models";
 import { MistralAIKeyChecker } from "./checker";
+<<<<<<< HEAD
+=======
+import { HttpError } from "../../errors";
+>>>>>>> upstream/main
 
 type MistralAIKeyUsage = {
   [K in MistralAIModelFamily as `${K}Tokens`]: number;
@@ -48,11 +52,42 @@ export class MistralAIKeyProvider implements KeyProvider<MistralAIKey> {
     let bareKeys: string[];
     bareKeys = [...new Set(keyConfig.split(",").map((k) => k.trim()))];
     for (const key of bareKeys) {
+<<<<<<< HEAD
       this.addKey(key, true);
+=======
+      const newKey: MistralAIKey = {
+        key,
+        service: this.service,
+        modelFamilies: [
+          "mistral-tiny",
+          "mistral-small",
+          "mistral-medium",
+          "mistral-large",
+        ],
+        isDisabled: false,
+        isRevoked: false,
+        promptCount: 0,
+        lastUsed: 0,
+        rateLimitedAt: 0,
+        rateLimitedUntil: 0,
+        hash: `mst-${crypto
+          .createHash("sha256")
+          .update(key)
+          .digest("hex")
+          .slice(0, 8)}`,
+        lastChecked: 0,
+        "mistral-tinyTokens": 0,
+        "mistral-smallTokens": 0,
+        "mistral-mediumTokens": 0,
+        "mistral-largeTokens": 0,
+      };
+      this.keys.push(newKey);
+>>>>>>> upstream/main
     }
     this.log.info({ keyCount: this.keys.length }, "Loaded Mistral AI keys.");
   }
 
+<<<<<<< HEAD
   addKey(key: string, init: boolean): boolean {
     const hash = `mst-${crypto
       .createHash("sha256")
@@ -99,6 +134,8 @@ export class MistralAIKeyProvider implements KeyProvider<MistralAIKey> {
     return true;
   }
 
+=======
+>>>>>>> upstream/main
   public init() {
     if (config.checkKeys) {
       const updateFn = this.update.bind(this);
@@ -114,7 +151,11 @@ export class MistralAIKeyProvider implements KeyProvider<MistralAIKey> {
   public get(_model: Model) {
     const availableKeys = this.keys.filter((k) => !k.isDisabled);
     if (availableKeys.length === 0) {
+<<<<<<< HEAD
       throw new Error("No Mistral AI keys available");
+=======
+      throw new HttpError(402, "No Mistral AI keys available");
+>>>>>>> upstream/main
     }
 
     // (largely copied from the OpenAI provider, without trial key support)

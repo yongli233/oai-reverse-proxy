@@ -2,7 +2,14 @@ import express from "express";
 import { Sha256 } from "@aws-crypto/sha256-js";
 import { SignatureV4 } from "@smithy/signature-v4";
 import { HttpRequest } from "@smithy/protocol-http";
+<<<<<<< HEAD
 import { AnthropicV1CompleteSchema } from "../../../../shared/api-schemas/anthropic";
+=======
+import {
+  AnthropicV1TextSchema,
+  AnthropicV1MessagesSchema,
+} from "../../../../shared/api-schemas/anthropic";
+>>>>>>> upstream/main
 import { keyPool } from "../../../../shared/key-management";
 import { RequestPreprocessor } from "../index";
 
@@ -12,6 +19,7 @@ const AMZ_HOST =
 /**
  * Signs an outgoing AWS request with the appropriate headers modifies the
  * request object in place to fix the path.
+<<<<<<< HEAD
  */
 export const signAwsRequest: RequestPreprocessor = async (req) => {
   req.key = keyPool.get("anthropic.claude-v2", "aws");
@@ -35,6 +43,52 @@ export const signAwsRequest: RequestPreprocessor = async (req) => {
   })
     .strip()
     .parse(req.body);
+=======
+ * This happens AFTER request transformation.
+ */
+export const signAwsRequest: RequestPreprocessor = async (req) => {
+  const { model, stream } = req.body;
+  req.key = keyPool.get(model, "aws");
+
+  req.isStreaming = stream === true || stream === "true";
+
+  // same as addAnthropicPreamble for non-AWS requests, but has to happen here
+  if (req.outboundApi === "anthropic-text") {
+    let preamble = req.body.prompt.startsWith("\n\nHuman:") ? "" : "\n\nHuman:";
+    req.body.prompt = preamble + req.body.prompt;
+  }
+
+  // AWS uses mostly the same parameters as Anthropic, with a few removed params
+  // and much stricter validation on unused parameters. Rather than treating it
+  // as a separate schema we will use the anthropic ones and strip the unused
+  // parameters.
+  // TODO: This should happen in transform-outbound-payload.ts
+  let strippedParams: Record<string, unknown>;
+  if (req.outboundApi === "anthropic-chat") {
+    strippedParams = AnthropicV1MessagesSchema.pick({
+      messages: true,
+      max_tokens: true,
+      stop_sequences: true,
+      temperature: true,
+      top_k: true,
+      top_p: true,
+    })
+      .strip()
+      .parse(req.body);
+    strippedParams.anthropic_version = "bedrock-2023-05-31";
+  } else {
+    strippedParams = AnthropicV1TextSchema.pick({
+      prompt: true,
+      max_tokens_to_sample: true,
+      stop_sequences: true,
+      temperature: true,
+      top_k: true,
+      top_p: true,
+    })
+      .strip()
+      .parse(req.body);
+  }
+>>>>>>> upstream/main
 
   const credential = getCredentialParts(req);
   const host = AMZ_HOST.replace("%REGION%", credential.region);

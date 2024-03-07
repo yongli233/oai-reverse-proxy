@@ -3,11 +3,21 @@ import { logger } from "../../../../logger";
 import { APIFormat } from "../../../../shared/key-management";
 import { assertNever } from "../../../../shared/utils";
 import {
+<<<<<<< HEAD
   anthropicV1ToOpenAI,
   anthropicV2ToOpenAI,
   OpenAIChatCompletionStreamEvent,
   openAITextToOpenAIChat,
   googleAIToOpenAI,
+=======
+  anthropicChatToAnthropicV2,
+  anthropicV1ToOpenAI,
+  AnthropicV2StreamEvent,
+  anthropicV2ToOpenAI,
+  googleAIToOpenAI,
+  OpenAIChatCompletionStreamEvent,
+  openAITextToOpenAIChat,
+>>>>>>> upstream/main
   passthroughToOpenAI,
   StreamingCompletionTransformer,
 } from "./index";
@@ -26,9 +36,19 @@ type SSEMessageTransformerOptions = TransformOptions & {
  */
 export class SSEMessageTransformer extends Transform {
   private lastPosition: number;
+<<<<<<< HEAD
   private msgCount: number;
   private readonly inputFormat: APIFormat;
   private readonly transformFn: StreamingCompletionTransformer;
+=======
+  private transformState: any;
+  private msgCount: number;
+  private readonly inputFormat: APIFormat;
+  private readonly transformFn: StreamingCompletionTransformer<
+    // TODO: Refactor transformers to not assume only OpenAI events as output
+    OpenAIChatCompletionStreamEvent | AnthropicV2StreamEvent
+  >;
+>>>>>>> upstream/main
   private readonly log;
   private readonly fallbackId: string;
   private readonly fallbackModel: string;
@@ -58,6 +78,7 @@ export class SSEMessageTransformer extends Transform {
   _transform(chunk: Buffer, _encoding: BufferEncoding, callback: Function) {
     try {
       const originalMessage = chunk.toString();
+<<<<<<< HEAD
       const { event: transformedMessage, position: newPosition } =
         this.transformFn({
           data: originalMessage,
@@ -67,6 +88,22 @@ export class SSEMessageTransformer extends Transform {
           fallbackModel: this.fallbackModel,
         });
       this.lastPosition = newPosition;
+=======
+      const {
+        event: transformedMessage,
+        position: newPosition,
+        state,
+      } = this.transformFn({
+        data: originalMessage,
+        lastPosition: this.lastPosition,
+        index: this.msgCount++,
+        fallbackId: this.fallbackId,
+        fallbackModel: this.fallbackModel,
+        state: this.transformState,
+      });
+      this.lastPosition = newPosition;
+      this.transformState = state;
+>>>>>>> upstream/main
 
       // Special case for Azure OpenAI, which is 99% the same as OpenAI but
       // sometimes emits an extra event at the beginning of the stream with the
@@ -84,7 +121,11 @@ export class SSEMessageTransformer extends Transform {
       // Some events may not be transformed, e.g. ping events
       if (!transformedMessage) return callback();
 
+<<<<<<< HEAD
       if (this.msgCount === 1) {
+=======
+      if (this.msgCount === 1 && eventIsOpenAIEvent(transformedMessage)) {
+>>>>>>> upstream/main
         // TODO: does this need to be skipped for passthroughToOpenAI?
         this.push(createInitialMessage(transformedMessage));
       }
@@ -98,20 +139,44 @@ export class SSEMessageTransformer extends Transform {
   }
 }
 
+<<<<<<< HEAD
 function getTransformer(
   responseApi: APIFormat,
   version?: string
 ): StreamingCompletionTransformer {
+=======
+function eventIsOpenAIEvent(
+  event: any
+): event is OpenAIChatCompletionStreamEvent {
+  return event?.object === "chat.completion.chunk";
+}
+
+function getTransformer(
+  responseApi: APIFormat,
+  version?: string
+): StreamingCompletionTransformer<
+  OpenAIChatCompletionStreamEvent | AnthropicV2StreamEvent
+> {
+>>>>>>> upstream/main
   switch (responseApi) {
     case "openai":
     case "mistral-ai":
       return passthroughToOpenAI;
     case "openai-text":
       return openAITextToOpenAIChat;
+<<<<<<< HEAD
     case "anthropic":
       return version === "2023-01-01"
         ? anthropicV1ToOpenAI
         : anthropicV2ToOpenAI;
+=======
+    case "anthropic-text":
+      return version === "2023-01-01"
+        ? anthropicV1ToOpenAI
+        : anthropicV2ToOpenAI;
+    case "anthropic-chat":
+      return anthropicChatToAnthropicV2;
+>>>>>>> upstream/main
     case "google-ai":
       return googleAIToOpenAI;
     case "openai-image":

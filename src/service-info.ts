@@ -24,7 +24,10 @@ import { getCostSuffix, getTokenCostUsd, prettyTokens } from "./shared/stats";
 import { getUniqueIps } from "./proxy/rate-limit";
 import { assertNever } from "./shared/utils";
 import { getEstimatedWaitTime, getQueueLength } from "./proxy/queue";
+<<<<<<< HEAD
 import { getTotalsProompts, getTotalsTookens } from "./shared/users/user-store";
+=======
+>>>>>>> upstream/main
 import { MistralAIKey } from "./shared/key-management/mistral-ai/provider";
 
 const CACHE_TTL = 2000;
@@ -52,6 +55,10 @@ type ModelAggregates = {
   overQuota?: number;
   pozzed?: number;
   awsLogged?: number;
+<<<<<<< HEAD
+=======
+  awsSonnet?: number;
+>>>>>>> upstream/main
   queued: number;
   queueTime: string;
   tokens: number;
@@ -82,7 +89,11 @@ type AnthropicInfo = BaseFamilyInfo & {
   prefilledKeys?: number;
   overQuotaKeys?: number;
 };
+<<<<<<< HEAD
 type AwsInfo = BaseFamilyInfo & { privacy?: string };
+=======
+type AwsInfo = BaseFamilyInfo & { privacy?: string; sonnetKeys?: number };
+>>>>>>> upstream/main
 
 // prettier-ignore
 export type ServiceInfo = {
@@ -92,6 +103,10 @@ export type ServiceInfo = {
     openai2?: string;
     "openai-image"?: string;
     anthropic?: string;
+<<<<<<< HEAD
+=======
+    "anthropic-claude-3"?: string;
+>>>>>>> upstream/main
     "google-ai"?: string;
     "mistral-ai"?: string;
     aws?: string;
@@ -100,8 +115,11 @@ export type ServiceInfo = {
   proompts?: number;
   tookens?: string;
   proomptersNow?: number;
+<<<<<<< HEAD
 	proomptsTotal?: number;
 	tookensTotal?: number;
+=======
+>>>>>>> upstream/main
   status?: string;
   config: ReturnType<typeof listConfig>;
   build: string;
@@ -110,8 +128,12 @@ export type ServiceInfo = {
   & { [f in AwsBedrockModelFamily]?: AwsInfo }
   & { [f in AzureOpenAIModelFamily]?: BaseFamilyInfo; }
   & { [f in GoogleAIModelFamily]?: BaseFamilyInfo }
+<<<<<<< HEAD
   & { [f in MistralAIModelFamily]?: BaseFamilyInfo }
 	& ReturnType<typeof getServiceModelStats>["serviceInfo"]
+=======
+  & { [f in MistralAIModelFamily]?: BaseFamilyInfo };
+>>>>>>> upstream/main
 
 // https://stackoverflow.com/a/66661477
 // type DeepKeyOf<T> = (
@@ -136,6 +158,11 @@ const SERVICE_ENDPOINTS: { [s in LLMService]: Record<string, string> } = {
   },
   anthropic: {
     anthropic: `%BASE%/anthropic`,
+<<<<<<< HEAD
+=======
+    "anthropic-sonnet (⚠️Temporary: for Claude 3 Sonnet)": `%BASE%/anthropic/sonnet`,
+    "anthropic-opus (⚠️Temporary: for Claude 3 Opus)": `%BASE%/anthropic/opus`,
+>>>>>>> upstream/main
   },
   "google-ai": {
     "google-ai": `%BASE%/google-ai`,
@@ -145,6 +172,10 @@ const SERVICE_ENDPOINTS: { [s in LLMService]: Record<string, string> } = {
   },
   aws: {
     aws: `%BASE%/aws/claude`,
+<<<<<<< HEAD
+=======
+    "aws-sonnet (⚠️Temporary: for AWS Claude 3 Sonnet)": `%BASE%/aws/claude/sonnet`,
+>>>>>>> upstream/main
   },
   azure: {
     azure: `%BASE%/azure/openai`,
@@ -232,6 +263,7 @@ type TrafficStats = Pick<ServiceInfo, "proompts" | "tookens" | "proomptersNow">;
 function getTrafficStats(): TrafficStats {
   const tokens = serviceStats.get("tokens") || 0;
   const tokenCost = serviceStats.get("tokenCost") || 0;
+<<<<<<< HEAD
 
   return {
     proompts: serviceStats.get("proompts") || 0,
@@ -243,6 +275,12 @@ function getTrafficStats(): TrafficStats {
     ...(config.gatekeeper === "user_token"
       ? { tookensTotal: getTotalsTookens() }
       : {}),
+=======
+  return {
+    proompts: serviceStats.get("proompts") || 0,
+    tookens: `${prettyTokens(tokens)}${getCostSuffix(tokenCost)}`,
+    ...(config.textModelRateLimit ? { proomptersNow: getUniqueIps() } : {}),
+>>>>>>> upstream/main
   };
 }
 
@@ -334,6 +372,7 @@ function addKeyToAggregates(k: KeyPoolKey) {
       break;
     case "anthropic": {
       if (!keyIsAnthropicKey(k)) throw new Error("Invalid key type");
+<<<<<<< HEAD
       const family = "claude";
       sumTokens += k.claudeTokens;
       sumCost += getTokenCostUsd(family, k.claudeTokens);
@@ -342,6 +381,18 @@ function addKeyToAggregates(k: KeyPoolKey) {
       increment(modelStats, `${family}__revoked`, k.isRevoked ? 1 : 0);
       increment(modelStats, `${family}__tokens`, k.claudeTokens);
       increment(modelStats, `${family}__pozzed`, k.isPozzed ? 1 : 0);
+=======
+      k.modelFamilies.forEach((f) => {
+        const tokens = k[`${f}Tokens`];
+        sumTokens += tokens;
+        sumCost += getTokenCostUsd(f, tokens);
+        increment(modelStats, `${f}__tokens`, tokens);
+        increment(modelStats, `${f}__revoked`, k.isRevoked ? 1 : 0);
+        increment(modelStats, `${f}__active`, k.isDisabled ? 0 : 1);
+        increment(modelStats, `${f}__overQuota`, k.isOverQuota ? 1 : 0);
+        increment(modelStats, `${f}__pozzed`, k.isPozzed ? 1 : 0);
+      });
+>>>>>>> upstream/main
       increment(
         serviceStats,
         "anthropic__uncheckedKeys",
@@ -379,6 +430,10 @@ function addKeyToAggregates(k: KeyPoolKey) {
       increment(modelStats, `${family}__active`, k.isDisabled ? 0 : 1);
       increment(modelStats, `${family}__revoked`, k.isRevoked ? 1 : 0);
       increment(modelStats, `${family}__tokens`, k["aws-claudeTokens"]);
+<<<<<<< HEAD
+=======
+      increment(modelStats, `${family}__awsSonnet`, k.sonnetEnabled ? 1 : 0);
+>>>>>>> upstream/main
 
       // Ignore revoked keys for aws logging stats, but include keys where the
       // logging status is unknown.
@@ -426,6 +481,10 @@ function getInfoForFamily(family: ModelFamily): BaseFamilyInfo {
         info.prefilledKeys = modelStats.get(`${family}__pozzed`) || 0;
         break;
       case "aws":
+<<<<<<< HEAD
+=======
+        info.sonnetKeys = modelStats.get(`${family}__awsSonnet`) || 0;
+>>>>>>> upstream/main
         const logged = modelStats.get(`${family}__awsLogged`) || 0;
         if (logged > 0) {
           info.privacy = config.allowAwsLogging

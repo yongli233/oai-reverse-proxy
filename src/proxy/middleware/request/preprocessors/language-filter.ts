@@ -2,10 +2,18 @@ import { Request } from "express";
 import { config } from "../../../../config";
 import { assertNever } from "../../../../shared/utils";
 import { RequestPreprocessor } from "../index";
+<<<<<<< HEAD
 import { UserInputError } from "../../../../shared/errors";
 import {
   MistralAIChatMessage,
   OpenAIChatMessage,
+=======
+import { BadRequestError } from "../../../../shared/errors";
+import {
+  MistralAIChatMessage,
+  OpenAIChatMessage,
+  flattenAnthropicMessages,
+>>>>>>> upstream/main
 } from "../../../../shared/api-schemas";
 
 const rejectedClients = new Map<string, number>();
@@ -45,7 +53,11 @@ export const languageFilter: RequestPreprocessor = async (req) => {
       req.res!.once("close", resolve);
       setTimeout(resolve, delay);
     });
+<<<<<<< HEAD
     throw new UserInputError(config.rejectMessage);
+=======
+    throw new BadRequestError(config.rejectMessage);
+>>>>>>> upstream/main
   }
 };
 
@@ -53,7 +65,13 @@ function getPromptFromRequest(req: Request) {
   const service = req.outboundApi;
   const body = req.body;
   switch (service) {
+<<<<<<< HEAD
     case "anthropic":
+=======
+    case "anthropic-chat":
+      return flattenAnthropicMessages(body.messages);
+    case "anthropic-text":
+>>>>>>> upstream/main
       return body.prompt;
     case "openai":
     case "mistral-ai":

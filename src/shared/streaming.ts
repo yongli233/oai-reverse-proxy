@@ -1,7 +1,10 @@
 import { Response } from "express";
 import { IncomingMessage } from "http";
+<<<<<<< HEAD
 import { assertNever } from "./utils";
 import { APIFormat } from "./key-management";
+=======
+>>>>>>> upstream/main
 
 export function initializeSseStream(res: Response) {
   res.statusCode = 200;
@@ -35,6 +38,7 @@ export function copySseResponseHeaders(
   }
 }
 
+<<<<<<< HEAD
 /**
  * Returns an SSE message that looks like a completion event for the service
  * that the request is being proxied to. Used to send error messages to the
@@ -121,3 +125,5 @@ export function makeCompletionSSE({
 
   return `data: ${JSON.stringify(event)}\n\n`;
 }
+=======
+>>>>>>> upstream/main

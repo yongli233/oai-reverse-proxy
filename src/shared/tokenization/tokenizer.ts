@@ -16,6 +16,10 @@ import {
 } from "./mistral";
 import { APIFormat } from "../key-management";
 import {
+<<<<<<< HEAD
+=======
+  AnthropicChatMessage,
+>>>>>>> upstream/main
   GoogleAIChatMessage,
   MistralAIChatMessage,
   OpenAIChatMessage,
@@ -27,6 +31,7 @@ export async function init() {
   initMistralAI();
 }
 
+<<<<<<< HEAD
 /** Tagged union via `service` field of the different types of requests that can
  * be made to the tokenization service, for both prompts and completions */
 type TokenCountRequest = { req: Request } & (
@@ -44,6 +49,62 @@ type TokenCountRequest = { req: Request } & (
     }
   | { prompt?: never; completion: string; service: APIFormat }
   | { prompt?: never; completion?: never; service: "openai-image" }
+=======
+type OpenAIChatTokenCountRequest = {
+  prompt: OpenAIChatMessage[];
+  completion?: never;
+  service: "openai";
+};
+
+type AnthropicChatTokenCountRequest = {
+  prompt: AnthropicChatMessage[];
+  completion?: never;
+  service: "anthropic-chat";
+};
+
+type GoogleAIChatTokenCountRequest = {
+  prompt: GoogleAIChatMessage[];
+  completion?: never;
+  service: "google-ai";
+};
+
+type MistralAIChatTokenCountRequest = {
+  prompt: MistralAIChatMessage[];
+  completion?: never;
+  service: "mistral-ai";
+};
+
+type FlatPromptTokenCountRequest = {
+  prompt: string;
+  completion?: never;
+  service: "openai-text" | "anthropic-text" | "google-ai";
+};
+
+type StringCompletionTokenCountRequest = {
+  prompt?: never;
+  completion: string;
+  service: APIFormat;
+};
+
+type OpenAIImageCompletionTokenCountRequest = {
+  prompt?: never;
+  completion?: never;
+  service: "openai-image";
+};
+
+/**
+ * Tagged union via `service` field of the different types of requests that can
+ * be made to the tokenization service, for both prompts and completions
+ */
+type TokenCountRequest = { req: Request } & (
+  | OpenAIChatTokenCountRequest
+  | AnthropicChatTokenCountRequest
+  | GoogleAIChatTokenCountRequest
+  | MistralAIChatTokenCountRequest
+  | FlatPromptTokenCountRequest
+  | StringCompletionTokenCountRequest
+  | OpenAIImageCompletionTokenCountRequest
+>>>>>>> upstream/main
 );
 
 type TokenCountResult = {
@@ -60,9 +121,16 @@ export async function countTokens({
 }: TokenCountRequest): Promise<TokenCountResult> {
   const time = process.hrtime();
   switch (service) {
+<<<<<<< HEAD
     case "anthropic":
       return {
         ...getClaudeTokenCount(prompt ?? completion, req.body.model),
+=======
+    case "anthropic-chat":
+    case "anthropic-text":
+      return {
+        ...(await getClaudeTokenCount(prompt ?? completion)),
+>>>>>>> upstream/main
         tokenization_duration_ms: getElapsedMs(time),
       };
     case "openai":

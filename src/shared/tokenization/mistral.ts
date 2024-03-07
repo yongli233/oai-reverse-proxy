@@ -29,6 +29,7 @@ export function getTokenCount(prompt: MistralAIChatMessage[] | string) {
 }
 
 function getTextTokenCount(prompt: string) {
+<<<<<<< HEAD
   // Don't try tokenizing if the prompt is massive to prevent DoS.
   // 500k characters should be sufficient for all supported models.
   if (prompt.length > 500000) {
@@ -36,6 +37,10 @@ function getTextTokenCount(prompt: string) {
       tokenizer: "length fallback",
       token_count: 100000,
     };
+=======
+  if (prompt.length > 800000) {
+    throw new Error("Content is too large to tokenize.");
+>>>>>>> upstream/main
   }
 
   return {

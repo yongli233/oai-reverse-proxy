@@ -10,9 +10,15 @@
 import admin from "firebase-admin";
 import schedule from "node-schedule";
 import { v4 as uuid } from "uuid";
+<<<<<<< HEAD
 import crypto from "crypto";
 import { config, getFirebaseApp } from "../../config";
 import {
+=======
+import { config, getFirebaseApp } from "../../config";
+import {
+  getAwsBedrockModelFamily,
+>>>>>>> upstream/main
   getAzureOpenAIModelFamily,
   getClaudeModelFamily,
   getGoogleAIModelFamily,
@@ -25,7 +31,10 @@ import { logger } from "../../logger";
 import { User, UserTokenCounts, UserUpdate } from "./schema";
 import { APIFormat } from "../key-management";
 import { assertNever } from "../utils";
+<<<<<<< HEAD
 import { getTokenCostUsd, prettyTokens } from "../stats";
+=======
+>>>>>>> upstream/main
 
 const log = logger.child({ module: "users" });
 
@@ -36,6 +45,10 @@ const INITIAL_TOKENS: Required<UserTokenCounts> = {
   "gpt4-turbo": 0,
   "dall-e": 0,
   claude: 0,
+<<<<<<< HEAD
+=======
+  "claude-opus": 0,
+>>>>>>> upstream/main
   "gemini-pro": 0,
   "mistral-tiny": 0,
   "mistral-small": 0,
@@ -86,6 +99,7 @@ export function createUser(createOptions?: {
   expiresAt?: number;
   tokenLimits?: User["tokenLimits"];
 }) {
+<<<<<<< HEAD
   const token = `hp-${uuid().replace(/-/g, "").slice(0, 24)}`
   const newUser: User = {
     token,
@@ -95,6 +109,14 @@ export function createUser(createOptions?: {
     promptCount: 0,
     promptCountSinceStart: 0,
     tokenCountsSinceStart: { ...INITIAL_TOKENS },
+=======
+  const token = uuid();
+  const newUser: User = {
+    token,
+    ip: [],
+    type: "normal",
+    promptCount: 0,
+>>>>>>> upstream/main
     tokenCounts: { ...INITIAL_TOKENS },
     tokenLimits: createOptions?.tokenLimits ?? { ...config.tokenQuota },
     createdAt: Date.now(),
@@ -124,6 +146,7 @@ export function getUsers() {
   return Array.from(users.values()).map((user) => ({ ...user }));
 }
 
+<<<<<<< HEAD
 export function getTotalsProompts() {
   const users = getUsers();
 
@@ -235,6 +258,8 @@ export function rotateUserToken(token: string) {
   return newToken;
 }
 
+=======
+>>>>>>> upstream/main
 /**
  * Upserts the given user. Intended for use with the /admin API for updating
  * arbitrary fields on a user; use the other functions in this module for
@@ -247,11 +272,16 @@ export function upsertUser(user: UserUpdate) {
   const existing: User = users.get(user.token) ?? {
     token: user.token,
     ip: [],
+<<<<<<< HEAD
     ipUsage: [],
     type: "normal",
     promptCount: 0,
     promptCountSinceStart: 0,
     tokenCountsSinceStart: { ...INITIAL_TOKENS },
+=======
+    type: "normal",
+    promptCount: 0,
+>>>>>>> upstream/main
     tokenCounts: { ...INITIAL_TOKENS },
     tokenLimits: { ...config.tokenQuota },
     createdAt: Date.now(),
@@ -281,12 +311,15 @@ export function upsertUser(user: UserUpdate) {
     }
   }
 
+<<<<<<< HEAD
   updates.ip = (user.ip ?? existing.ip ?? []).map((ip) => hashIp(ip));
   updates.ipUsage = (user.ipUsage ?? existing.ipUsage ?? []).map((usage) => ({
     ...usage,
     ip: hashIp(usage.ip),
   }));
 
+=======
+>>>>>>> upstream/main
   users.set(user.token, Object.assign(existing, updates));
   usersToFlush.add(user.token);
 
@@ -299,6 +332,7 @@ export function upsertUser(user: UserUpdate) {
 }
 
 /** Increments the prompt count for the given user. */
+<<<<<<< HEAD
 export function incrementPromptCount(token: string, ip: string) {
   const user = users.get(token);
   if (!user) return;
@@ -316,6 +350,12 @@ export function incrementPromptCount(token: string, ip: string) {
     ipUsage.prompt++;
   }
 
+=======
+export function incrementPromptCount(token: string) {
+  const user = users.get(token);
+  if (!user) return;
+  user.promptCount++;
+>>>>>>> upstream/main
   usersToFlush.add(token);
 }
 
@@ -331,9 +371,12 @@ export function incrementTokenCount(
   const modelFamily = getModelFamilyForQuotaUsage(model, api);
   const existing = user.tokenCounts[modelFamily] ?? 0;
   user.tokenCounts[modelFamily] = existing + consumption;
+<<<<<<< HEAD
   user.tokenCountsSinceStart[modelFamily] =
     (user.tokenCountsSinceStart[modelFamily] ?? 0) + consumption;
 
+=======
+>>>>>>> upstream/main
   usersToFlush.add(token);
 }
 
@@ -350,8 +393,12 @@ export function authenticate(
   if (!user) return { result: "not_found" };
   if (user.disabledAt) return { result: "disabled" };
 
+<<<<<<< HEAD
   const hashedIp = hashIp(ip);
   const newIp = !user.ip.includes(hashedIp);
+=======
+  const newIp = !user.ip.includes(ip);
+>>>>>>> upstream/main
 
   const userLimit = user.maxIps ?? config.maxIpsPerUser;
   const enforcedLimit =
@@ -359,12 +406,17 @@ export function authenticate(
 
   if (newIp && user.ip.length >= enforcedLimit) {
     if (config.maxIpsAutoBan) {
+<<<<<<< HEAD
       user.ip.push(hashedIp);
+=======
+      user.ip.push(ip);
+>>>>>>> upstream/main
       disableUser(token, "IP address limit exceeded.");
       return { result: "disabled" };
     }
     return { result: "limited" };
   } else if (newIp) {
+<<<<<<< HEAD
     user.ip.push(hashedIp);
   }
 
@@ -373,6 +425,9 @@ export function authenticate(
   else {
     const data = user.ipUsage.find((usage) => usage.ip === hashedIp);
     if (!data) user.ipUsage.push({ ip: hashedIp, prompt: 0 });
+=======
+    user.ip.push(ip);
+>>>>>>> upstream/main
   }
 
   user.lastUsedAt = Date.now();
@@ -499,9 +554,12 @@ async function initFirebase() {
     return;
   }
   for (const token in users) {
+<<<<<<< HEAD
     users[token].promptCountSinceStart = 0;
     users[token].tokenCountsSinceStart = { ...INITIAL_TOKENS };
 
+=======
+>>>>>>> upstream/main
     upsertUser(users[token]);
   }
   usersToFlush.clear();
@@ -544,15 +602,27 @@ function getModelFamilyForQuotaUsage(
   model: string,
   api: APIFormat
 ): ModelFamily {
+<<<<<<< HEAD
   // TODO: this seems incorrect
   if (model.includes("azure")) return getAzureOpenAIModelFamily(model);
+=======
+  // "azure" here is added to model names by the Azure key provider to
+  // differentiate between Azure and OpenAI variants of the same model.
+  if (model.includes("azure")) return getAzureOpenAIModelFamily(model);
+  if (model.includes("anthropic.")) return getAwsBedrockModelFamily(model);
+>>>>>>> upstream/main
 
   switch (api) {
     case "openai":
     case "openai-text":
     case "openai-image":
       return getOpenAIModelFamily(model);
+<<<<<<< HEAD
     case "anthropic":
+=======
+    case "anthropic-chat":
+    case "anthropic-text":
+>>>>>>> upstream/main
       return getClaudeModelFamily(model);
     case "google-ai":
       return getGoogleAIModelFamily(model);
@@ -573,8 +643,11 @@ function getRefreshCrontab() {
       return config.quotaRefreshPeriod ?? "0 0 * * *";
   }
 }
+<<<<<<< HEAD
 
 function hashIp(ip: string) {
   if (ip.startsWith("ip")) return ip;
   return `ip-${crypto.createHash("sha256").update(ip).digest("hex")}`;
 }
+=======
+>>>>>>> upstream/main

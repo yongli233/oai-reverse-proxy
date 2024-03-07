@@ -9,7 +9,10 @@ const { generateToken, doubleCsrfProtection } = doubleCsrf({
     sameSite: "strict",
     path: "/",
     secure: !config.useInsecureCookies,
+<<<<<<< HEAD
     maxAge: 1000 * 60 * 60 * 24 * 14,
+=======
+>>>>>>> upstream/main
   },
   getTokenFromRequest: (req) => {
     const val = req.body["_csrf"] || req.query["_csrf"];

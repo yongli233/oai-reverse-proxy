@@ -64,6 +64,7 @@ export class KeyPool {
     }
   }
 
+<<<<<<< HEAD
   public addKeys(service: LLMService, keys: string[]) {
     const keyProvider = this.getKeyProvider(service);
     let addedKeys = 0;
@@ -111,6 +112,8 @@ export class KeyPool {
     return removedKeys;
   }
 
+=======
+>>>>>>> upstream/main
   public update(key: Key, props: AllowedPartial): void {
     const service = this.getKeyProvider(key.service);
     service.update(key.hash, props);
@@ -183,7 +186,11 @@ export class KeyPool {
     throw new Error(`Unknown service for model '${model}'`);
   }
 
+<<<<<<< HEAD
   public getKeyProvider(service: LLMService): KeyProvider {
+=======
+  private getKeyProvider(service: LLMService): KeyProvider {
+>>>>>>> upstream/main
     return this.keyProviders.find((provider) => provider.service === service)!;
   }
 
