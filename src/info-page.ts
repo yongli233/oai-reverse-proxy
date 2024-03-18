@@ -30,6 +30,7 @@ const MODEL_FAMILY_FRIENDLY_NAME: { [f in ModelFamily]: string } = {
   "azure-gpt4": "Azure GPT-4",
   "azure-gpt4-32k": "Azure GPT-4 32k",
   "azure-gpt4-turbo": "Azure GPT-4 Turbo",
+  "azure-dall-e": "Azure DALL-E",
 };
 
 const converter = new showdown.Converter();
@@ -174,9 +175,10 @@ export function getServerTitle() {
 }
 
 function buildRecentImageSection() {
+  const dalleModels: ModelFamily[] = ["azure-dall-e", "dall-e"];
   if (
-    !config.allowedModelFamilies.includes("dall-e") ||
-    !config.showRecentImages
+    !config.showRecentImages ||
+    dalleModels.every((f) => !config.allowedModelFamilies.includes(f))
   ) {
     return "";
   }
@@ -197,6 +199,7 @@ function buildRecentImageSection() {
 </div>`;
   }
   html += `</div>`;
+  html += `<p style="clear: both; text-align: center;"><a href="/user/image-history">View all recent images</a></p>`
 
   return html;
 }

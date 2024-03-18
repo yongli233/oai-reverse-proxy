@@ -73,6 +73,31 @@
           width: 100%;
         }
       }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #222;
+          color: #eee;
+        }
+
+        a:link,
+        a:visited {
+          color: #bbe;
+        }
+
+        a:link:hover,
+        a:visited:hover {
+          background-color: #446;
+        }
+
+        table.striped tr:nth-child(even) {
+          background-color: #333;
+        }
+
+        th.active {
+          background-color: #446;
+        }
+      }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   </head>

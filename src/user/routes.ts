@@ -1,9 +1,11 @@
 import express, { Router } from "express";
 import { injectCsrfToken, checkCsrfToken } from "../shared/inject-csrf";
+import { browseImagesRouter } from "./web/browse-images";
 import { selfServiceRouter } from "./web/self-service";
 import { selfServiceAPIRouter } from "./api/self-services-api";
 import { injectLocals } from "../shared/inject-locals";
 import { withSession } from "../shared/with-session";
+import { config } from "../config";
 
 const userRouter = Router();
 
@@ -18,7 +20,9 @@ userRouter.use("/api", selfServiceAPIRouter);
 
 userRouter.use(checkCsrfToken);
 userRouter.use(injectLocals);
-
+if (config.showRecentImages) {
+  userRouter.use(browseImagesRouter);
+}
 userRouter.use(selfServiceRouter);
 
 userRouter.use(
